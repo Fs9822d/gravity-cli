@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 // Export config
 export * from './config/config.js';
 export * from './config/agent-loop-context.js';
@@ -57,6 +62,7 @@ export * from './routing/modelRouterService.js';
 export * from './fallback/types.js';
 export * from './fallback/handler.js';
 
+export * from './core/antigravityContentGenerator.js';
 export * from './code_assist/codeAssist.js';
 export * from './code_assist/oauth2.js';
 export * from './code_assist/server.js';
@@ -206,6 +212,8 @@ export { resetBrowserSession } from './agents/browser/browserAgentFactory.js';
 // Export agent session interface
 export * from './agent/agent-session.js';
 export * from './agent/legacy-agent-session.js';
+export * from './agent/acp-process-manager.js';
+export * from './agent/acp-agent-protocol.js';
 export * from './agent/event-translator.js';
 export * from './agent/content-utils.js';
 export * from './agent/tool-display-utils.js';

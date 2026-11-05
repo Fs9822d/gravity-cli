@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import {
   getErrorMessage,
@@ -129,6 +134,7 @@ export const useAgentStream = ({
   const currentStreamIdRef = useRef<string | null>(null);
   const userMessageTimestampRef = useRef<number>(0);
   const geminiMessageBufferRef = useRef<string>('');
+  const thoughtBufferRef = useRef<string>('');
   const [pendingHistoryItem, pendingHistoryItemRef, setPendingHistoryItem] =
     useStateAndRef<HistoryItemWithoutId | null>(null);
 
@@ -155,11 +161,11 @@ export const useAgentStream = ({
   // This includes activePtyId, backgroundTasks, and related visibility states to restore
   // parity with legacy terminal focus detection and background task tracking.
   // Note: Avoid checking ITERM_SESSION_ID for terminal detection and ensure context is sanitized.
-  const activePtyId = undefined;
+  const activePtyId: number | undefined = undefined;
   const backgroundTaskCount = 0;
   const isBackgroundTaskVisible = false;
   const toggleBackgroundTasks = useCallback(() => {}, []);
-  const backgroundCurrentExecution = undefined;
+  const backgroundCurrentExecution = useCallback(() => {}, []);
   const backgroundTasks = useMemo(() => new Map<number, BackgroundTask>(), []);
   const dismissBackgroundTask = useCallback(async (_pid: number) => {}, []);
 
@@ -351,9 +357,12 @@ export const useAgentStream = ({
       setLastOutputTime(Date.now());
       switch (event.type) {
         case 'agent_start':
+          thoughtBufferRef.current = '';
+          setThought(null);
           setStreamingState(StreamingState.Responding);
           break;
         case 'agent_end':
+          thoughtBufferRef.current = '';
           setStreamingState(StreamingState.Idle);
           flushPendingText();
           break;
@@ -389,7 +398,8 @@ export const useAgentStream = ({
                   });
                 }
               } else if (part.type === 'thought') {
-                setThought(parseThought(part.thought));
+                thoughtBufferRef.current += part.thought;
+                setThought(parseThought(thoughtBufferRef.current));
               }
             }
           }
@@ -472,7 +482,10 @@ export const useAgentStream = ({
               const outputFile = legacyState?.outputFile;
               const display = event.display?.result;
               const resultDisplay =
-                displayContentToString(display) ?? tc.resultDisplay;
+                displayContentToString(display) ??
+                event.display?.resultSummary ??
+                undefined ??
+                tc.resultDisplay;
 
               return {
                 ...tc,

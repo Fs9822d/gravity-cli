@@ -21,8 +21,8 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
       <Text color={theme.text.primary}>Tips for getting started:</Text>
       {geminiMdFileCount === 0 && (
         <Text color={theme.text.primary}>
-          1. Create <Text bold>GEMINI.md</Text> files to customize your
-          interactions
+          1. Create <Text bold>GRAVITY.md</Text> or <Text bold>GEMINI.md</Text>{' '}
+          files to customize your interactions
         </Text>
       )}
       <Text color={theme.text.primary}>

@@ -7,13 +7,14 @@ exports[`AuthDialog > Snapshots > renders correctly with auth error 1`] = `
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Sign in with Google(not selected) Use Gemini API Key(not selected) Vertex AI        │
+│   (selected) 1. Google AI OAuth Flow (Personal /     (not selected) 2. Google AI API             │
+│   Workspace)                                         (GEMINI_API_KEY)                            │
 │                                                                                                  │
 │   Something went wrong                                                                           │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Gemini CLI                                            │
+│   Terms of Services and Notice for Gravity Harness                                               │
 │                                                                                                  │
 │   https://geminicli.com/docs/resources/tos-privacy/                                              │
 │                                                                                                  │
@@ -28,11 +29,12 @@ exports[`AuthDialog > Snapshots > renders correctly with default props 1`] = `
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Sign in with Google(not selected) Use Gemini API Key(not selected) Vertex AI        │
+│   (selected) 1. Google AI OAuth Flow (Personal /     (not selected) 2. Google AI API             │
+│   Workspace)                                         (GEMINI_API_KEY)                            │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Gemini CLI                                            │
+│   Terms of Services and Notice for Gravity Harness                                               │
 │                                                                                                  │
 │   https://geminicli.com/docs/resources/tos-privacy/                                              │
 │                                                                                                  │
@@ -47,11 +49,11 @@ exports[`AuthDialog > Snapshots > renders correctly with enforced auth type 1`] 
 │                                                                                                  │
 │   How would you like to authenticate for this project?                                           │
 │                                                                                                  │
-│   (selected) Use Gemini API Key                                                                  │
+│   (selected) 2. Google AI API (GEMINI_API_KEY)                                                   │
 │                                                                                                  │
 │   (Use Enter to select)                                                                          │
 │                                                                                                  │
-│   Terms of Services and Privacy Notice for Gemini CLI                                            │
+│   Terms of Services and Notice for Gravity Harness                                               │
 │                                                                                                  │
 │   https://geminicli.com/docs/resources/tos-privacy/                                              │
 │                                                                                                  │

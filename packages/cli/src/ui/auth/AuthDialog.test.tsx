@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { act } from 'react';
 import { renderWithProviders } from '../../test-utils/render.js';
 import {
   describe,
@@ -16,15 +15,13 @@ import {
   type Mock,
 } from 'vitest';
 import { AuthDialog } from './AuthDialog.js';
-import { AuthType, type Config, debugLogger } from '@google/gemini-cli-core';
+import { AuthType, type Config } from '@google/gemini-cli-core';
 import { SettingScope, type LoadedSettings } from '../../config/settings.js';
 import { AuthState } from '../types.js';
 import { RadioButtonSelect } from '../components/shared/RadioButtonSelect.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { validateAuthMethodWithSettings } from './useAuth.js';
-import { runExitCleanup } from '../../utils/cleanup.js';
 import { Text } from 'ink';
-import { RELAUNCH_EXIT_CODE } from '../../utils/processUtils.js';
 
 // Mocks
 vi.mock('@google/gemini-cli-core', async (importOriginal) => {
@@ -35,10 +32,6 @@ vi.mock('@google/gemini-cli-core', async (importOriginal) => {
     clearCachedCredentialFile: vi.fn(),
   };
 });
-
-vi.mock('../../utils/cleanup.js', () => ({
-  runExitCleanup: vi.fn(),
-}));
 
 vi.mock('./useAuth.js', () => ({
   validateAuthMethodWithSettings: vi.fn(),
@@ -64,7 +57,6 @@ vi.mock('../components/shared/RadioButtonSelect.js', () => ({
 const mockedUseKeypress = useKeypress as Mock;
 const mockedRadioButtonSelect = RadioButtonSelect as Mock;
 const mockedValidateAuthMethod = validateAuthMethodWithSettings as Mock;
-const mockedRunExitCleanup = runExitCleanup as Mock;
 
 describe('AuthDialog', () => {
   let props: {
@@ -105,57 +97,15 @@ describe('AuthDialog', () => {
     vi.unstubAllEnvs();
   });
 
-  describe('Environment Variable Effects on Auth Options', () => {
-    const cloudShellLabel = 'Use Cloud Shell user credentials';
-    const metadataServerLabel =
-      'Use metadata server application default credentials';
-    const computeAdcItem = (label: string) => ({
-      label,
-      value: AuthType.COMPUTE_ADC,
-      key: AuthType.COMPUTE_ADC,
+  describe('Streamlined Auth Options', () => {
+    it('presents the 2 streamlined onboarding options', async () => {
+      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
+      const items = mockedRadioButtonSelect.mock.calls[0][0].items;
+      expect(items).toHaveLength(2);
+      expect(items[0].value).toBe(AuthType.LOGIN_WITH_GOOGLE);
+      expect(items[1].value).toBe(AuthType.USE_GEMINI);
+      unmount();
     });
-
-    it.each([
-      {
-        env: { CLOUD_SHELL: 'true' },
-        shouldContain: [computeAdcItem(cloudShellLabel)],
-        shouldNotContain: [computeAdcItem(metadataServerLabel)],
-        desc: 'in Cloud Shell',
-      },
-      {
-        env: { GEMINI_CLI_USE_COMPUTE_ADC: 'true' },
-        shouldContain: [computeAdcItem(metadataServerLabel)],
-        shouldNotContain: [computeAdcItem(cloudShellLabel)],
-        desc: 'with GEMINI_CLI_USE_COMPUTE_ADC',
-      },
-      {
-        env: {},
-        shouldContain: [],
-        shouldNotContain: [
-          computeAdcItem(cloudShellLabel),
-          computeAdcItem(metadataServerLabel),
-        ],
-        desc: 'by default',
-      },
-    ])(
-      'correctly shows/hides COMPUTE_ADC options $desc',
-      async ({ env, shouldContain, shouldNotContain }) => {
-        for (const [key, value] of Object.entries(env)) {
-          vi.stubEnv(key, value as string);
-        }
-        const { unmount } = await renderWithProviders(
-          <AuthDialog {...props} />,
-        );
-        const items = mockedRadioButtonSelect.mock.calls[0][0].items;
-        for (const item of shouldContain) {
-          expect(items).toContainEqual(item);
-        }
-        for (const item of shouldNotContain) {
-          expect(items).not.toContainEqual(item);
-        }
-        unmount();
-      },
-    );
   });
 
   it('filters auth types when enforcedType is set', async () => {
@@ -180,9 +130,9 @@ describe('AuthDialog', () => {
       {
         setup: () => {
           props.settings.merged.security.auth.selectedType =
-            AuthType.USE_VERTEX_AI;
+            AuthType.USE_GEMINI;
         },
-        expected: AuthType.USE_VERTEX_AI,
+        expected: AuthType.USE_GEMINI,
         desc: 'from settings',
       },
       {
@@ -240,32 +190,6 @@ describe('AuthDialog', () => {
       expect(props.setAuthContext).toHaveBeenCalledWith({
         requiresRestart: true,
       });
-      unmount();
-    });
-
-    it('sets auth context with requiresRestart: true for USE_VERTEX_AI in Cloud Shell', async () => {
-      vi.stubEnv('CLOUD_SHELL', 'true');
-      mockedValidateAuthMethod.mockResolvedValue(null);
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_VERTEX_AI);
-
-      expect(props.setAuthContext).toHaveBeenCalledWith({
-        requiresRestart: true,
-      });
-      unmount();
-    });
-
-    it('sets auth context with empty object for USE_VERTEX_AI outside Cloud Shell', async () => {
-      vi.stubEnv('CLOUD_SHELL', '');
-      mockedValidateAuthMethod.mockResolvedValue(null);
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_VERTEX_AI);
-
-      expect(props.setAuthContext).toHaveBeenCalledWith({});
       unmount();
     });
 
@@ -346,27 +270,7 @@ describe('AuthDialog', () => {
       unmount();
     });
 
-    it('clears cached credentials when re-selecting LOGIN_WITH_GOOGLE to prevent staying stuck in cached account', async () => {
-      mockedValidateAuthMethod.mockResolvedValue(null);
-      // Simulate that user is currently signed in with Google (e.g. cached free-tier account from previous test run)
-      props.settings.merged.security.auth.selectedType =
-        AuthType.LOGIN_WITH_GOOGLE;
-
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-
-      // User selects "Sign in with Google" again expecting to authenticate/switch accounts
-      await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
-
-      const { clearCachedCredentialFile } = await import(
-        '@google/gemini-cli-core'
-      );
-      expect(clearCachedCredentialFile).toHaveBeenCalled();
-      unmount();
-    });
-
-    it('clears cached credentials when selecting LOGIN_WITH_GOOGLE even if selectedType is undefined', async () => {
+    it('sets Authenticated state when selecting LOGIN_WITH_GOOGLE', async () => {
       mockedValidateAuthMethod.mockResolvedValue(null);
       props.settings.merged.security.auth.selectedType = undefined;
 
@@ -376,125 +280,12 @@ describe('AuthDialog', () => {
 
       await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
 
-      const { clearCachedCredentialFile } = await import(
-        '@google/gemini-cli-core'
-      );
-      expect(clearCachedCredentialFile).toHaveBeenCalled();
-      unmount();
-    });
-
-    it('does not clear cached credentials when switching between non-Google auth methods', async () => {
-      mockedValidateAuthMethod.mockResolvedValue(null);
-      props.settings.merged.security.auth.selectedType = AuthType.USE_GEMINI;
-
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-
-      await handleAuthSelect(AuthType.USE_VERTEX_AI);
-
-      const { clearCachedCredentialFile } = await import(
-        '@google/gemini-cli-core'
-      );
-      expect(clearCachedCredentialFile).not.toHaveBeenCalled();
-      unmount();
-    });
-
-    it('handles errors when clearCachedCredentialFile fails gracefully and logs via debugLogger', async () => {
-      mockedValidateAuthMethod.mockResolvedValue(null);
-      props.settings.merged.security.auth.selectedType =
-        AuthType.LOGIN_WITH_GOOGLE;
-
-      const { clearCachedCredentialFile } = await import(
-        '@google/gemini-cli-core'
-      );
-      const testError = new Error('Disk I/O failure');
-      vi.mocked(clearCachedCredentialFile).mockRejectedValueOnce(testError);
-      const errorSpy = vi
-        .spyOn(debugLogger, 'error')
-        .mockImplementation(() => {});
-
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-
-      await expect(
-        handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE),
-      ).resolves.not.toThrow();
-
-      expect(errorSpy).toHaveBeenCalledWith(
-        'Failed to clear cached credentials:',
-        testError,
-      );
-      expect(props.onAuthError).toHaveBeenCalledWith(
-        'Failed to clear cached credentials: Disk I/O failure',
-      );
-      expect(props.settings.setValue).not.toHaveBeenCalled();
-      errorSpy.mockRestore();
-      unmount();
-    });
-
-    it('allows switching to non-Google auth methods even if clearCachedCredentialFile fails to prevent lockouts', async () => {
-      mockedValidateAuthMethod.mockResolvedValue(null);
-      props.settings.merged.security.auth.selectedType =
-        AuthType.LOGIN_WITH_GOOGLE;
-
-      const { clearCachedCredentialFile } = await import(
-        '@google/gemini-cli-core'
-      );
-      const testError = new Error('Disk I/O failure');
-      vi.mocked(clearCachedCredentialFile).mockRejectedValueOnce(testError);
-      const errorSpy = vi
-        .spyOn(debugLogger, 'error')
-        .mockImplementation(() => {});
-
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-
-      await expect(
-        handleAuthSelect(AuthType.USE_GEMINI),
-      ).resolves.not.toThrow();
-
-      expect(errorSpy).toHaveBeenCalledWith(
-        'Failed to clear cached credentials:',
-        testError,
-      );
-      expect(props.onAuthError).toHaveBeenCalledWith(
-        'Failed to clear cached credentials: Disk I/O failure',
-      );
       expect(props.settings.setValue).toHaveBeenCalledWith(
         SettingScope.User,
         'security.auth.selectedType',
-        AuthType.USE_GEMINI,
+        AuthType.LOGIN_WITH_GOOGLE,
       );
-      errorSpy.mockRestore();
-      unmount();
-    });
-
-    it('exits process for Sign in with Google when browser is suppressed', async () => {
-      vi.useFakeTimers();
-      const exitSpy = vi
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never);
-      const logSpy = vi.spyOn(debugLogger, 'log').mockImplementation(() => {});
-      vi.mocked(props.config.isBrowserLaunchSuppressed).mockReturnValue(true);
-      mockedValidateAuthMethod.mockResolvedValue(null);
-
-      const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
-      const { onSelect: handleAuthSelect } =
-        mockedRadioButtonSelect.mock.calls[0][0];
-      await act(async () => {
-        await handleAuthSelect(AuthType.LOGIN_WITH_GOOGLE);
-        await vi.runAllTimersAsync();
-      });
-
-      expect(mockedRunExitCleanup).toHaveBeenCalled();
-      expect(exitSpy).toHaveBeenCalledWith(RELAUNCH_EXIT_CODE);
-
-      exitSpy.mockRestore();
-      logSpy.mockRestore();
-      vi.useRealTimers();
+      expect(props.setAuthState).toHaveBeenCalledWith(AuthState.Authenticated);
       unmount();
     });
 

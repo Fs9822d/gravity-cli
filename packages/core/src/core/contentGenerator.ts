@@ -16,13 +16,13 @@ import {
 import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as os from 'node:os';
-import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import { isCloudShell } from '../ide/detect-ide.js';
 import type { Config } from '../config/config.js';
 import { loadApiKey } from './apiKeyCredentialStorage.js';
 
 import type { UserTierId, GeminiUserTier } from '../code_assist/types.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
+import { AntigravityContentGenerator } from './antigravityContentGenerator.js';
 import { InstallationManager } from '../utils/installationManager.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
 import { parseCustomHeaders } from '../utils/customHeaderUtils.js';
@@ -210,7 +210,7 @@ export async function createContentGeneratorConfig(
 export async function createContentGenerator(
   config: ContentGeneratorConfig,
   gcConfig: Config,
-  sessionId?: string,
+  _sessionId?: string,
 ): Promise<ContentGenerator> {
   const generator = await (async () => {
     if (gcConfig.fakeResponsesNonStrict) {
@@ -294,17 +294,8 @@ export async function createContentGenerator(
       config.authType === AuthType.LOGIN_WITH_GOOGLE ||
       config.authType === AuthType.COMPUTE_ADC
     ) {
-      const httpOptions = { headers: baseHeaders };
       return new LoggingContentGenerator(
-        new ModelMappingContentGenerator(
-          await createCodeAssistContentGenerator(
-            httpOptions,
-            config.authType,
-            gcConfig,
-            sessionId,
-          ),
-          () => getBackendModelMappings(gcConfig, true),
-        ),
+        new AntigravityContentGenerator(gcConfig),
         gcConfig,
       );
     }

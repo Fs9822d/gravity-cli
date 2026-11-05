@@ -5,10 +5,10 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { modelCommand } from './modelCommand.js';
+import { modelCommand, ANTIGRAVITY_MODELS } from './modelCommand.js';
 import { type CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
-import type { Config } from '@google/gemini-cli-core';
+import { type Config, AuthType } from '@google/gemini-cli-core';
 import { MessageType } from '../types.js';
 
 describe('modelCommand', () => {
@@ -165,6 +165,54 @@ describe('modelCommand', () => {
         expect.objectContaining({
           type: MessageType.ERROR,
           text: expect.stringContaining('Usage: /model set <model-name>'),
+        }),
+      );
+    });
+  });
+
+  describe('list subcommand', () => {
+    it('should list all available Antigravity models in Antigravity mode', async () => {
+      const listCommand = modelCommand.subCommands?.find(
+        (c) => c.name === 'list',
+      );
+      expect(listCommand).toBeDefined();
+
+      await listCommand!.action!(mockContext, '');
+
+      expect(mockContext.ui.addItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: MessageType.INFO,
+          text: expect.stringContaining('gemini-3.8-flash-high'),
+        }),
+      );
+      expect(ANTIGRAVITY_MODELS.length).toBe(6);
+    });
+
+    it('should list Google AI API models when in USE_GEMINI mode', async () => {
+      mockContext.services.settings.merged.security.auth.selectedType =
+        AuthType.USE_GEMINI;
+      const listCommand = modelCommand.subCommands?.find(
+        (c) => c.name === 'list',
+      );
+      expect(listCommand).toBeDefined();
+
+      await listCommand!.action!(mockContext, '');
+
+      expect(mockContext.ui.addItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: MessageType.INFO,
+          text: expect.stringContaining('Available Google AI API Models:'),
+        }),
+      );
+    });
+
+    it('should route /model list via main command action', async () => {
+      await modelCommand.action!(mockContext, 'list');
+
+      expect(mockContext.ui.addItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: MessageType.INFO,
+          text: expect.stringContaining('gemini-3.8-flash'),
         }),
       );
     });

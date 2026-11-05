@@ -1,9 +1,32 @@
-npm run pre-commit || {
-  echo ''
-  echo '===================================================='
-  echo 'pre-commit checks failed. in case of emergency, run:'
-  echo ''
-  echo 'git commit --no-verify'
-  echo '===================================================='
-  exit 1
-}
+# Resolve npm for GUI tools (GitHub Desktop, Flatpak, launch environments)
+if ! command -v npm >/dev/null 2>&1; then
+  if command -v flatpak-spawn >/dev/null 2>&1; then
+    flatpak-spawn --host npm run pre-commit
+    exit $?
+  fi
+
+  for p in /usr/bin /usr/local/bin "$HOME/.nvm/versions/node/"*"/bin" "$HOME/.local/bin"; do
+    if [ -x "$p/npm" ]; then
+      export PATH="$p:$PATH"
+      break
+    fi
+  done
+
+  if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc" >/dev/null 2>&1 || true
+  fi
+fi
+
+if command -v npm >/dev/null 2>&1; then
+  npm run pre-commit || {
+    echo ''
+    echo '===================================================='
+    echo 'pre-commit checks failed. in case of emergency, run:'
+    echo ''
+    echo 'git commit --no-verify'
+    echo '===================================================='
+    exit 1
+  }
+else
+  echo 'Warning: npm not found in current environment (GUI/Flatpak). Skipping pre-commit hook.'
+fi

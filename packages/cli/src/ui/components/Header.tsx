@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 import type React from 'react';
 import { Box } from 'ink';
 import { ThemedGradient } from './ThemedGradient.js';

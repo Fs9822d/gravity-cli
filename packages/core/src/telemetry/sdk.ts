@@ -58,7 +58,8 @@ import {
   getMemoryMonitor,
 } from './memory-monitor.js';
 import { startGlobalEventLoopMonitoring } from './event-loop-monitor.js';
-import { authEvents } from '../code_assist/oauth2.js';
+import { EventEmitter } from 'node:events';
+export const authEvents = new EventEmitter();
 import { coreEvents, CoreEvent } from '../utils/events.js';
 import {
   logKeychainAvailability,

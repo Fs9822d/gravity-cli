@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { SandboxPolicyManager } from '../policy/sandboxPolicyManager.js';
@@ -757,6 +762,8 @@ export interface ConfigParameters {
   };
   vertexAiRouting?: VertexAiRoutingConfig;
   logRagSnippets?: boolean;
+  antigravityPath?: string;
+  antigravityThoughtLevel?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 }
 
 export class Config implements McpContext, AgentLoopContext {
@@ -861,6 +868,13 @@ export class Config implements McpContext, AgentLoopContext {
   validationHandler?: ValidationHandler;
   private quotaErrorOccurred: boolean = false;
   private creditsNotificationShown: boolean = false;
+  private readonly antigravityPath?: string;
+  private readonly antigravityThoughtLevel?:
+    | 'low'
+    | 'medium'
+    | 'high'
+    | 'xhigh'
+    | 'max';
   private modelQuotas: Map<
     string,
     { remaining: number; limit: number; resetTime?: string }
@@ -1035,6 +1049,8 @@ export class Config implements McpContext, AgentLoopContext {
     this.debugMode = params.debugMode;
     this.question = params.question;
     this.worktreeSettings = params.worktreeSettings;
+    this.antigravityPath = params.antigravityPath;
+    this.antigravityThoughtLevel = params.antigravityThoughtLevel;
 
     this._sandboxPolicyManager = new SandboxPolicyManager();
     const initialApprovalMode =
@@ -2296,6 +2312,20 @@ export class Config implements McpContext, AgentLoopContext {
   }
   getQuestion(): string | undefined {
     return this.question;
+  }
+
+  getAntigravityPath(): string | undefined {
+    return this.antigravityPath;
+  }
+
+  getAntigravityThoughtLevel():
+    | 'low'
+    | 'medium'
+    | 'high'
+    | 'xhigh'
+    | 'max'
+    | undefined {
+    return this.antigravityThoughtLevel;
   }
 
   getHasAccessToPreviewModel(): boolean {

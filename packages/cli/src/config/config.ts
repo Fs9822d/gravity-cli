@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import process from 'node:process';
@@ -15,6 +20,7 @@ import { skillsCommand } from '../commands/skills.js';
 import { hooksCommand } from '../commands/hooks.js';
 import { gemmaCommand } from '../commands/gemma.js';
 import { modelsCommand } from '../commands/models.js';
+import { loginCommand } from '../commands/login.js';
 import {
   setGeminiMdFilename as setServerGeminiMdFilename,
   resetGeminiMdFilename,
@@ -113,6 +119,8 @@ export interface CliArgs {
   acceptRawOutputRisk: boolean | undefined;
   skipTrust: boolean | undefined;
   isCommand: boolean | undefined;
+  antigravityPath?: string;
+  antigravityThoughtLevel?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 }
 
 /**
@@ -167,9 +175,9 @@ export async function parseArguments(
   const startupMessages: string[] = [];
   const yargsInstance = yargs(rawArgv)
     .locale('en')
-    .scriptName('gemini')
+    .scriptName('gravity')
     .usage(
-      'Usage: gemini [options] [command]\n\nGemini CLI - Defaults to interactive mode. Use -p/--prompt for non-interactive (headless) mode.',
+      'Usage: gravity [options] [command]\n\nGravity Harness - Defaults to interactive mode. Use -p/--prompt for non-interactive (headless) mode.',
     )
     .option('isCommand', {
       type: 'boolean',
@@ -184,6 +192,7 @@ export async function parseArguments(
     })
     .middleware((argv) => {
       const commandModules = [
+        loginCommand,
         mcpCommand,
         extensionsCommand,
         skillsCommand,
@@ -278,6 +287,7 @@ export async function parseArguments(
       return true;
     });
 
+  yargsInstance.command(loginCommand);
   yargsInstance.command(mcpCommand);
   yargsInstance.command(extensionsCommand);
   yargsInstance.command(skillsCommand);
@@ -286,7 +296,7 @@ export async function parseArguments(
   yargsInstance.command(modelsCommand);
 
   yargsInstance
-    .command('$0 [query..]', 'Launch Gemini CLI', (yargsInstance) =>
+    .command('$0 [query..]', 'Launch Gravity Harness', (yargsInstance) =>
       yargsInstance
         .positional('query', {
           description:
@@ -297,6 +307,15 @@ export async function parseArguments(
           type: 'string',
           nargs: 1,
           description: `Model`,
+        })
+        .option('antigravity-path', {
+          type: 'string',
+          description: 'Path to custom Antigravity binary (agy)',
+        })
+        .option('antigravity-thought-level', {
+          type: 'string',
+          choices: ['low', 'medium', 'high', 'xhigh', 'max'],
+          description: 'Antigravity reasoning effort level',
         })
         .option('prompt', {
           alias: 'p',
@@ -1104,7 +1123,11 @@ export async function loadCliConfig(
       format: (argv.outputFormat ?? settings.output?.format) as OutputFormat,
     },
     gemmaModelRouter: settings.experimental?.gemmaModelRouter,
-    adk: settings.experimental?.adk,
+    adk: {
+      ...settings.experimental?.adk,
+      agentSessionInteractiveEnabled:
+        settings.experimental?.adk?.agentSessionInteractiveEnabled ?? true,
+    },
     fakeResponses: argv.fakeResponses,
     fakeResponsesNonStrict: argv.fakeResponsesNonStrict,
     recordResponses: argv.recordResponses,
@@ -1133,6 +1156,8 @@ export async function loadCliConfig(
       };
     },
     enableConseca: settings.security?.enableConseca,
+    antigravityPath: argv.antigravityPath,
+    antigravityThoughtLevel: argv.antigravityThoughtLevel,
   });
 }
 

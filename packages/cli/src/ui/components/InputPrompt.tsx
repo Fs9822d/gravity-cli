@@ -210,7 +210,7 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
   config,
   slashCommands,
   commandContext,
-  placeholder = '  Type your message or @path/to/file',
+  placeholder = '  Ask Gravity anything or type @path/to/file',
   focus = true,
   setShellModeActive,
   approvalMode,

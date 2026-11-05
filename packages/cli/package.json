@@ -1,7 +1,7 @@
 {
-  "name": "@google/gemini-cli",
+  "name": "@gravity/cli",
   "version": "0.67.0-nightly.20261020.gb041de017",
-  "description": "Gemini CLI",
+  "description": "Gravity Harness - Modern AI Terminal Agent Interface powered by Antigravity",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -10,7 +10,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "gemini": "dist/index.js"
+    "gravity": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@agentclientprotocol/sdk": "0.16.1",
+    "@gravity/core": "file:../core",
     "@google/gemini-cli-core": "file:../core",
     "@google/genai": "1.30.0",
     "@iarna/toml": "2.2.5",

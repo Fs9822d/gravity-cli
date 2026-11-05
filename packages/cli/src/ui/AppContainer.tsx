@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 import {
   useMemo,
   useState,
@@ -70,7 +75,6 @@ import {
   isValidEditorType,
   coreEvents,
   CoreEvent,
-  flattenMemory,
   type MemoryChangedPayload,
   writeToStdout,
   disableMouseEvents,
@@ -90,7 +94,9 @@ import {
   buildUserSteeringHintPrompt,
   logBillingEvent,
   ApiKeyUpdatedEvent,
-  LegacyAgentProtocol,
+  flattenMemory,
+  AcpAgentProtocol,
+  AcpProcessManager,
   type InjectionSource,
 } from '@google/gemini-cli-core';
 import { validateAuthMethod } from '../config/auth.js';
@@ -645,7 +651,7 @@ export const AppContainer = (props: AppContainerProps) => {
       );
 
       const ideClient = await IdeClient.getInstance();
-      await ideClient.disconnect();
+      await ideClient?.disconnect?.();
 
       // Fire SessionEnd hook on cleanup (only if hooks are enabled)
       await config?.getHookSystem()?.fireSessionEndEvent(SessionEndReason.Exit);
@@ -1069,7 +1075,7 @@ export const AppContainer = (props: AppContainerProps) => {
         ) {
           writeToStdout(`
 ----------------------------------------------------------------
-Logging in with Google... Restarting Gemini CLI to continue.
+Logging in with Google... Restarting Gravity Harness to continue.
 ----------------------------------------------------------------
           `);
           await relaunchApp();
@@ -1318,52 +1324,6 @@ Logging in with Google... Restarting Gemini CLI to continue.
     };
   }, []);
 
-  const performMemoryRefresh = useCallback(async () => {
-    historyManager.addItem(
-      {
-        type: MessageType.INFO,
-        text: 'Refreshing hierarchical memory (GEMINI.md or other context files)...',
-      },
-      Date.now(),
-    );
-    try {
-      await config.getMemoryContextManager()?.refresh();
-      config.updateSystemInstructionIfInitialized();
-      const flattenedMemory = flattenMemory(config.getUserMemory());
-      const fileCount = config.getGeminiMdFileCount();
-
-      historyManager.addItem(
-        {
-          type: MessageType.INFO,
-          text: `Memory reloaded successfully. ${
-            flattenedMemory.length > 0
-              ? `Loaded ${flattenedMemory.length} characters from ${fileCount} file(s)`
-              : 'No memory content found'
-          }`,
-        },
-        Date.now(),
-      );
-      if (config.getDebugMode()) {
-        debugLogger.log(
-          `[DEBUG] Refreshed memory content in config: ${flattenedMemory.substring(
-            0,
-            200,
-          )}...`,
-        );
-      }
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      historyManager.addItem(
-        {
-          type: MessageType.ERROR,
-          text: `Error refreshing memory: ${errorMessage}`,
-        },
-        Date.now(),
-      );
-      debugLogger.warn('Error refreshing memory:', error);
-    }
-  }, [config, historyManager]);
-
   const cancelHandlerRef = useRef<
     (shouldRestorePrompt?: boolean, clearBuffer?: boolean) => void
   >(() => {});
@@ -1425,13 +1385,73 @@ Logging in with Google... Restarting Gemini CLI to continue.
     };
   }, [config]);
 
-  const streamAgent = useMemo(
-    () =>
-      config?.getAgentSessionInteractiveEnabled()
-        ? new LegacyAgentProtocol({ config, getPreferredEditor })
-        : undefined,
-    [config, getPreferredEditor],
-  );
+  const performMemoryRefresh = useCallback(async () => {
+    historyManager.addItem(
+      {
+        type: MessageType.INFO,
+        text: 'Refreshing hierarchical memory (GEMINI.md or other context files)...',
+      },
+      Date.now(),
+    );
+    try {
+      await config.getMemoryContextManager()?.refresh();
+      config.updateSystemInstructionIfInitialized();
+      const flattenedMemory = flattenMemory(config.getUserMemory());
+      const fileCount = config.getGeminiMdFileCount();
+
+      historyManager.addItem(
+        {
+          type: MessageType.INFO,
+          text: `Memory reloaded successfully. ${
+            flattenedMemory.length > 0
+              ? `Loaded ${flattenedMemory.length} characters from ${fileCount} file(s)`
+              : 'No memory content found'
+          }`,
+        },
+        Date.now(),
+      );
+
+      if (config.getDebugMode()) {
+        debugLogger.log(
+          `[DEBUG] Refreshed memory content in config: ${flattenedMemory.substring(
+            0,
+            200,
+          )}...`,
+        );
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      historyManager.addItem(
+        {
+          type: MessageType.ERROR,
+          text: `Error refreshing memory: ${errorMessage}`,
+        },
+        Date.now(),
+      );
+      debugLogger.warn('Error refreshing memory:', error);
+    }
+  }, [config, historyManager]);
+
+  const streamAgent = useMemo(() => {
+    if (config?.getAgentSessionInteractiveEnabled?.() === false) {
+      return undefined;
+    }
+    const processManager = new AcpProcessManager({
+      antigravityPath: config.getAntigravityPath?.(),
+      effort: config.getAntigravityThoughtLevel?.(),
+      sandbox: config.getSandbox?.() !== undefined,
+      model: config.getModel?.(),
+    });
+    return new AcpAgentProtocol(processManager, {
+      workspaceDir: config.getTargetDir?.() || process.cwd(),
+      getMode: () => {
+        const approvalMode = config.getApprovalMode?.();
+        if (approvalMode === 'plan') return 'plan';
+        if (approvalMode === 'autoEdit') return 'accept-edits';
+        return approvalMode || 'default';
+      },
+    });
+  }, [config]);
 
   const activeStream = streamAgent
     ? // eslint-disable-next-line react-hooks/rules-of-hooks

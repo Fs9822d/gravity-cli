@@ -10,6 +10,7 @@ import * as os from 'node:os';
 import * as crypto from 'node:crypto';
 import type { Keychain } from './keychainTypes.js';
 import { GEMINI_DIR, homedir } from '../utils/paths.js';
+import { debugLogger } from '../utils/debugLogger.js';
 
 export class FileKeychain implements Keychain {
   private readonly tokenFilePath: string;
@@ -100,10 +101,10 @@ export class FileKeychain implements Keychain {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return JSON.parse(decrypted) as Record<string, Record<string, string>>;
     } catch {
-      throw new Error(
-        `Corrupted credentials file detected at: ${this.tokenFilePath}\n` +
-          `Please delete or rename this file to resolve the issue.`,
+      debugLogger.warn(
+        `Could not decrypt credentials file at: ${this.tokenFilePath}. Resetting in-memory cache.`,
       );
+      return {};
     }
   }
 

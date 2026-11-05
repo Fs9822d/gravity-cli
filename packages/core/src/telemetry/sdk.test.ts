@@ -10,7 +10,7 @@ import {
   initializeTelemetry,
   shutdownTelemetry,
   bufferTelemetryEvent,
-} from './sdk.js';
+ authEvents } from './sdk.js';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-grpc';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
@@ -31,7 +31,6 @@ import { TelemetryTarget } from './index.js';
 import * as os from 'node:os';
 import * as path from 'node:path';
 
-import { authEvents } from '../code_assist/oauth2.js';
 import { debugLogger } from '../utils/debugLogger.js';
 
 vi.mock('@opentelemetry/exporter-trace-otlp-grpc');

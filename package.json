@@ -1,5 +1,6 @@
 {
-  "name": "@google/gemini-cli",
+  "name": "gravity-harness",
+  "description": "Gravity Harness - Modern AI Terminal Agent Interface powered by Antigravity",
   "version": "0.67.0-nightly.20261020.gb041de017",
   "engines": {
     "node": ">=20.0.0"
@@ -28,7 +29,7 @@
     "auth:docker": "gcloud auth configure-docker us-west1-docker.pkg.dev",
     "auth": "npm run auth:npm && npm run auth:docker",
     "generate": "node scripts/generate-git-commit-info.js",
-    "predocs:settings": "npm run build --workspace @google/gemini-cli-core",
+    "predocs:settings": "npm run build --workspace @gravity/core",
     "schema:settings": "tsx ./scripts/generate-settings-schema.ts",
     "docs:settings": "tsx ./scripts/generate-settings-doc.ts",
     "docs:keybindings": "tsx ./scripts/generate-keybindings-doc.ts",
@@ -44,7 +45,7 @@
     "build:packages": "npm run build --workspaces",
     "build:sandbox": "node scripts/build_sandbox.js",
     "build:binary": "node scripts/build_binary.js",
-    "bundle": "npm run generate && npm run build --workspace=@google/gemini-cli-devtools && npm run bundle:browser-mcp -w @google/gemini-cli-core && node esbuild.config.js && node scripts/copy_bundle_assets.js",
+    "bundle": "npm run generate && npm run build --workspace=@google/gemini-cli-devtools && npm run bundle:browser-mcp -w @gravity/core && node esbuild.config.js && node scripts/copy_bundle_assets.js",
     "test": "npm run test --workspaces --if-present && npm run test:sea-launch",
     "test:ci": "npm run test:ci --workspaces --if-present && npm run test:scripts && npm run test:sea-launch",
     "test:scripts": "vitest run --config ./scripts/tests/vitest.config.ts",
@@ -90,7 +91,7 @@
     "cross-spawn": "7.0.6"
   },
   "bin": {
-    "gemini": "bundle/gemini.js"
+    "gravity": "bundle/gemini.js"
   },
   "files": [
     "bundle/",

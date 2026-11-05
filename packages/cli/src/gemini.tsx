@@ -20,7 +20,6 @@ import {
   UserPromptEvent,
   coreEvents,
   CoreEvent,
-  getOauthClient,
   patchStdio,
   writeToStdout,
   writeToStderr,
@@ -878,15 +877,6 @@ export async function main() {
         });
       })
       .catch((e) => debugLogger.warn('LiteRT auto-start import failed:', e));
-
-    if (
-      settings.merged.security.auth.selectedType ===
-        AuthType.LOGIN_WITH_GOOGLE &&
-      config.isBrowserLaunchSuppressed()
-    ) {
-      // Do oauth before app renders to make copying the link possible.
-      await getOauthClient(settings.merged.security.auth.selectedType, config);
-    }
 
     if (config.getAcpMode()) {
       return runAcpClient(config, settings, argv);

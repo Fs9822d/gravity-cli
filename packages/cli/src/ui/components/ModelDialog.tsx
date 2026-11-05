@@ -4,35 +4,30 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * Modifications Copyright 2026 Gravity Project Maintainers
+ * Licensed under the Apache License, Version 2.0
+ */
+
 import type React from 'react';
-import { useCallback, useContext, useMemo, useState, useEffect } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { Box, Text } from 'ink';
 import { ModelQuotaDisplay } from './ModelQuotaDisplay.js';
 import { useUIState } from '../contexts/UIStateContext.js';
 import {
-  PREVIEW_GEMINI_MODEL,
-  PREVIEW_GEMINI_3_1_MODEL,
-  PREVIEW_GEMINI_FLASH_MODEL,
-  PREVIEW_GEMINI_FLASH_LITE_MODEL,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
-  DEFAULT_GEMINI_FLASH_LITE_MODEL,
-  GEMINI_MODEL_ALIAS_AUTO,
-  GEMMA_4_31B_IT_MODEL,
-  GEMMA_4_26B_A4B_IT_MODEL,
   ModelSlashCommandEvent,
   logModelSlashCommand,
-  getDisplayString,
   AuthType,
-  PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL,
-  isProModel,
-  getAutoModelDescription,
 } from '@google/gemini-cli-core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { theme } from '../semantic-colors.js';
 import { DescriptiveRadioButtonSelect } from './shared/DescriptiveRadioButtonSelect.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
 import { useSettings } from '../contexts/SettingsContext.js';
+import {
+  ANTIGRAVITY_MODELS,
+  GOOGLE_AI_API_MODELS,
+} from '../commands/modelCommand.js';
 
 interface ModelDialogProps {
   onClose: () => void;
@@ -42,75 +37,20 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const config = useContext(ConfigContext);
   const settings = useSettings();
   const { terminalWidth } = useUIState();
-  const [hasAccessToProModel, setHasAccessToProModel] = useState<boolean>(
-    () => !(config?.getProModelNoAccessSync() ?? false),
-  );
-  const [view, setView] = useState<'main' | 'manual'>(() =>
-    config?.getProModelNoAccessSync() ? 'manual' : 'main',
-  );
   const [persistMode, setPersistMode] = useState(false);
 
-  useEffect(() => {
-    async function checkAccess() {
-      if (!config) return;
-      const noAccess = await config.getProModelNoAccess();
-      setHasAccessToProModel(!noAccess);
-      if (noAccess) {
-        setView('manual');
-      }
-    }
-    void checkAccess();
-  }, [config]);
+  // Determine the Preferred Model
+  const preferredModel = config?.getModel() || '';
 
-  // Determine the Preferred Model (read once when the dialog opens).
-  const preferredModel = config?.getModel() || GEMINI_MODEL_ALIAS_AUTO;
-
-  const shouldShowPreviewModels = config?.getHasAccessToPreviewModel() ?? false;
-  const useGemini31 = config?.getGemini31LaunchedSync?.() ?? false;
-  const useLatestFlash = config?.hasLatestFlashGAAccess?.() ?? false;
-  const useLatestFlashLite = config?.hasLatestFlashLiteGAAccess?.() ?? false;
-  const selectedAuthType = settings.merged.security.auth.selectedType;
-  const useCustomToolModel =
-    useGemini31 && selectedAuthType === AuthType.USE_GEMINI;
-
-  const manualModelSelected = useMemo(() => {
-    if (
-      config?.getExperimentalDynamicModelConfiguration?.() === true &&
-      config.getModelConfigService
-    ) {
-      const def = config
-        .getModelConfigService()
-        .getModelDefinition(preferredModel);
-      // Only treat as manual selection if it's a visible, non-auto model.
-      return def && def.tier !== 'auto' && def.isVisible === true
-        ? preferredModel
-        : '';
-    }
-
-    const manualModels = [
-      DEFAULT_GEMINI_MODEL,
-      DEFAULT_GEMINI_FLASH_MODEL,
-      DEFAULT_GEMINI_FLASH_LITE_MODEL,
-      PREVIEW_GEMINI_MODEL,
-      PREVIEW_GEMINI_3_1_MODEL,
-      PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL,
-      PREVIEW_GEMINI_FLASH_LITE_MODEL,
-      PREVIEW_GEMINI_FLASH_MODEL,
-    ].filter((m) => m !== 'none');
-    if (manualModels.includes(preferredModel)) {
-      return preferredModel;
-    }
-    return '';
-  }, [preferredModel, config]);
+  const selectedAuthType =
+    settings.merged.security.auth.selectedType ||
+    config?.getContentGeneratorConfig()?.authType;
+  const isGoogleAi = selectedAuthType === AuthType.USE_GEMINI;
 
   useKeypress(
     (key) => {
       if (key.name === 'escape') {
-        if (view === 'manual' && hasAccessToProModel) {
-          setView('main');
-        } else {
-          onClose();
-        }
+        onClose();
         return true;
       }
       if (key.name === 'tab') {
@@ -121,221 +61,26 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     },
     { isActive: true },
   );
-  const mainOptions = useMemo(() => {
-    // --- DYNAMIC PATH ---
-    if (
-      config?.getExperimentalDynamicModelConfiguration?.() === true &&
-      config.getModelConfigService
-    ) {
-      const allOptions = config
-        .getModelConfigService()
-        .getAvailableModelOptions({
-          useGemini3_1: useGemini31,
-          useLatestFlash,
-          useLatestFlashLite,
-          useCustomTools: useCustomToolModel,
-          hasAccessToPreview: shouldShowPreviewModels,
-          hasAccessToProModel,
-        });
-
-      const list = allOptions
-        .filter((o) => o.tier === 'auto')
-        .map((o) => ({
-          value: o.modelId,
-          title: o.name,
-          description: o.description,
-          key: o.modelId,
-        }));
-
-      list.push({
-        value: 'Manual',
-        title: manualModelSelected
-          ? `Manual (${getDisplayString(manualModelSelected, config ?? undefined)})`
-          : 'Manual',
-        description: 'Manually select a model',
-        key: 'Manual',
-      });
-      return list;
-    }
-
-    // --- LEGACY PATH ---
-    const list = [
-      {
-        value: GEMINI_MODEL_ALIAS_AUTO,
-        title: getDisplayString(GEMINI_MODEL_ALIAS_AUTO),
-        description: getAutoModelDescription(
-          shouldShowPreviewModels,
-          useGemini31,
-          useLatestFlash,
-        ),
-        key: GEMINI_MODEL_ALIAS_AUTO,
-      },
-      {
-        value: 'Manual',
-        title: manualModelSelected
-          ? `Manual (${getDisplayString(manualModelSelected)})`
-          : 'Manual',
-        description: 'Manually select a model',
-        key: 'Manual',
-      },
-    ];
-
-    return list;
-  }, [
-    config,
-    shouldShowPreviewModels,
-    manualModelSelected,
-    useGemini31,
-    useLatestFlash,
-    useLatestFlashLite,
-    useCustomToolModel,
-    hasAccessToProModel,
-  ]);
-
-  const manualOptions = useMemo(() => {
-    // --- DYNAMIC PATH ---
-    if (
-      config?.getExperimentalDynamicModelConfiguration?.() === true &&
-      config.getModelConfigService
-    ) {
-      const allOptions = config
-        .getModelConfigService()
-        .getAvailableModelOptions({
-          useGemini3_1: useGemini31,
-          useLatestFlash,
-          useLatestFlashLite,
-          useCustomTools: useCustomToolModel,
-          hasAccessToPreview: shouldShowPreviewModels,
-          hasAccessToProModel,
-        });
-
-      return allOptions
-        .filter((o) => o.tier !== 'auto')
-        .map((o) => ({
-          value: o.modelId,
-          title: o.name,
-          key: o.modelId,
-        }));
-    }
-
-    // --- LEGACY PATH ---
-    const showGemmaModels = config?.getExperimentalGemma() ?? false;
-
-    const options = [
-      {
-        value: DEFAULT_GEMINI_MODEL,
-        title: getDisplayString(DEFAULT_GEMINI_MODEL),
-        key: DEFAULT_GEMINI_MODEL,
-      },
-      {
-        value: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-        title: getDisplayString(DEFAULT_GEMINI_FLASH_LITE_MODEL),
-        key: DEFAULT_GEMINI_FLASH_LITE_MODEL,
-      },
-      {
-        value: DEFAULT_GEMINI_FLASH_MODEL,
-        title: getDisplayString(DEFAULT_GEMINI_FLASH_MODEL),
-        key: DEFAULT_GEMINI_FLASH_MODEL,
-      },
-    ];
-
-    if (showGemmaModels) {
-      options.push(
-        {
-          value: GEMMA_4_31B_IT_MODEL,
-          title: getDisplayString(GEMMA_4_31B_IT_MODEL),
-          key: GEMMA_4_31B_IT_MODEL,
-        },
-        {
-          value: GEMMA_4_26B_A4B_IT_MODEL,
-          title: getDisplayString(GEMMA_4_26B_A4B_IT_MODEL),
-          key: GEMMA_4_26B_A4B_IT_MODEL,
-        },
-      );
-    }
-
-    if (shouldShowPreviewModels) {
-      const previewProModel = useGemini31
-        ? PREVIEW_GEMINI_3_1_MODEL
-        : PREVIEW_GEMINI_MODEL;
-
-      const previewProValue = useCustomToolModel
-        ? PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL
-        : previewProModel;
-
-      const previewOptions = [
-        {
-          value: previewProValue,
-          title: getDisplayString(previewProModel),
-          key: previewProModel,
-        },
-        {
-          value: PREVIEW_GEMINI_FLASH_MODEL,
-          title: getDisplayString(PREVIEW_GEMINI_FLASH_MODEL),
-          key: PREVIEW_GEMINI_FLASH_MODEL,
-        },
-      ];
-
-      if (PREVIEW_GEMINI_FLASH_LITE_MODEL !== 'none') {
-        previewOptions.push({
-          value: PREVIEW_GEMINI_FLASH_LITE_MODEL,
-          title: getDisplayString(PREVIEW_GEMINI_FLASH_LITE_MODEL),
-          key: PREVIEW_GEMINI_FLASH_LITE_MODEL,
-        });
-      }
-
-      options.unshift(...previewOptions);
-    }
-
-    if (!hasAccessToProModel) {
-      // Filter out all Pro models for free tier
-      return options.filter((option) => !isProModel(option.value));
-    }
-
-    return options;
-  }, [
-    shouldShowPreviewModels,
-    useGemini31,
-    useLatestFlash,
-    useLatestFlashLite,
-    useCustomToolModel,
-    hasAccessToProModel,
-    config,
-  ]);
 
   const options = useMemo(() => {
-    const rawOptions = view === 'main' ? mainOptions : manualOptions;
-    const seen = new Set<string>();
-    return rawOptions.filter((option) => {
-      if (seen.has(option.value)) {
-        return false;
-      }
-      seen.add(option.value);
-      return true;
-    });
-  }, [view, mainOptions, manualOptions]);
+    const list = isGoogleAi ? GOOGLE_AI_API_MODELS : ANTIGRAVITY_MODELS;
+    return list.map((m) => ({
+      value: m.id,
+      title: m.name,
+      description: m.description,
+      key: m.id,
+    }));
+  }, [isGoogleAi]);
 
   // Calculate the initial index based on the preferred model.
   const initialIndex = useMemo(() => {
     const idx = options.findIndex((option) => option.value === preferredModel);
-    if (idx !== -1) {
-      return idx;
-    }
-    if (view === 'main') {
-      const manualIdx = options.findIndex((o) => o.value === 'Manual');
-      return manualIdx !== -1 ? manualIdx : 0;
-    }
-    return 0;
-  }, [preferredModel, options, view]);
+    return idx !== -1 ? idx : 0;
+  }, [preferredModel, options]);
 
-  // Handle selection internally (Autonomous Dialog).
+  // Handle selection internally
   const handleSelect = useCallback(
     (model: string) => {
-      if (model === 'Manual') {
-        setView('manual');
-        return;
-      }
-
       if (config) {
         config.setModel(model, persistMode ? false : true);
         const event = new ModelSlashCommandEvent(model);
@@ -354,7 +99,11 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       padding={1}
       width="100%"
     >
-      <Text bold>Select Model</Text>
+      <Text bold>
+        {isGoogleAi
+          ? 'Select Google AI Model (API Key Mode)'
+          : 'Select Native Antigravity Model'}
+      </Text>
 
       <Box marginTop={1}>
         <DescriptiveRadioButtonSelect
@@ -377,7 +126,9 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       </Box>
       <Box flexDirection="column">
         <Text color={theme.text.secondary}>
-          {'> To use a specific Gemini model on startup, use the --model flag.'}
+          {isGoogleAi
+            ? '> To use a specific Google AI model on startup, use the --model flag.'
+            : '> To use a specific Antigravity model on startup, use the --model flag.'}
         </Text>
       </Box>
       <ModelQuotaDisplay
