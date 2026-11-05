@@ -5,7 +5,14 @@
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "types": ["node", "vitest/globals"],
-    "composite": true
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@gravity/core": ["../core/dist/index.d.ts"],
+      "@gravity/core/*": ["../core/dist/*"],
+      "@google/gemini-cli-core": ["../core/dist/index.d.ts"],
+      "@google/gemini-cli-core/*": ["../core/dist/*"]
+    }
   },
   "include": [
     "index.ts",
