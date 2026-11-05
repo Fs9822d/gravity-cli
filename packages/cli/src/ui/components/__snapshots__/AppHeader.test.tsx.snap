@@ -13,7 +13,7 @@ exports[`<AppHeader /> > should not render the banner when no flags are set 1`] 
  ░░░            ░░░░░░░░░    ░░░░░   ░░░ ░░░░░    ░░░      ░░░    ░░░░░  ░░░░░      ░░░░░    
 
 
- Gravity Harness v1.0.0
+ Gravity-CLI v1.0.0
 
 
 
@@ -38,7 +38,7 @@ exports[`<AppHeader /> > should not render the default banner if shown count is 
  ░░░            ░░░░░░░░░    ░░░░░   ░░░ ░░░░░    ░░░      ░░░    ░░░░░  ░░░░░      ░░░░░    
 
 
- Gravity Harness v1.0.0
+ Gravity-CLI v1.0.0
 
 
 
@@ -63,7 +63,7 @@ exports[`<AppHeader /> > should render the banner with default text 1`] = `
  ░░░            ░░░░░░░░░    ░░░░░   ░░░ ░░░░░    ░░░      ░░░    ░░░░░  ░░░░░      ░░░░░    
 
 
- Gravity Harness v1.0.0
+ Gravity-CLI v1.0.0
 
 
 ╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -91,7 +91,7 @@ exports[`<AppHeader /> > should render the banner with warning text 1`] = `
  ░░░            ░░░░░░░░░    ░░░░░   ░░░ ░░░░░    ░░░      ░░░    ░░░░░  ░░░░░      ░░░░░    
 
 
- Gravity Harness v1.0.0
+ Gravity-CLI v1.0.0
 
 
 ╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -119,6 +119,6 @@ exports[`<AppHeader /> > should render the full logo when logged out 1`] = `
  ░░░            ░░░░░░░░░    ░░░░░   ░░░ ░░░░░    ░░░      ░░░    ░░░░░  ░░░░░      ░░░░░    
 
 
- Gravity Harness v1.0.0
+ Gravity-CLI v1.0.0
 "
 `;

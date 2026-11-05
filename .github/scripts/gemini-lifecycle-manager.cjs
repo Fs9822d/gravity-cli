@@ -185,7 +185,7 @@ module.exports = async ({ github, context, core }) => {
         (typeof l === 'string' ? l : l.name).toLowerCase().includes('bug'),
       );
       const bodyText = isBug
-        ? `This bug report has been automatically marked as stale due to ${STALE_DAYS} days of inactivity. Many issues are resolved in newer releases. Please verify if the issue persists in the latest Gemini CLI version. If it does, please leave a comment to keep this open. It will be closed in ${CLOSE_DAYS} days if no further activity occurs. Thank you!`
+        ? `This bug report has been automatically marked as stale due to ${STALE_DAYS} days of inactivity. Many issues are resolved in newer releases. Please verify if the issue persists in the latest Gravity-CLI version. If it does, please leave a comment to keep this open. It will be closed in ${CLOSE_DAYS} days if no further activity occurs. Thank you!`
         : `This item has been automatically marked as stale due to ${STALE_DAYS} days of inactivity. It will be closed in ${CLOSE_DAYS} days if no further activity occurs. Thank you!`;
 
       if (dryRun) {
@@ -342,7 +342,7 @@ module.exports = async ({ github, context, core }) => {
           owner,
           repo,
           issue_number: pr.number,
-          body: "Hi there! Thank you for your interest in contributing to Gemini CLI. \n\nTo ensure we maintain high code quality and focus on our prioritized roadmap, we only guarantee review and consideration of pull requests for issues that are explicitly labeled as 'help wanted'. \n\nThis PR will be closed in 7 days if it remains without that designation. We encourage you to find and contribute to existing 'help wanted' issues in our backlog! Thank you for your understanding.",
+          body: "Hi there! Thank you for your interest in contributing to Gravity-CLI. \n\nTo ensure we maintain high code quality and focus on our prioritized roadmap, we only guarantee review and consideration of pull requests for issues that are explicitly labeled as 'help wanted'. \n\nThis PR will be closed in 7 days if it remains without that designation. We encourage you to find and contribute to existing 'help wanted' issues in our backlog! Thank you for your understanding.",
         });
       }
     },

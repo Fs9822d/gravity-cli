@@ -1,6 +1,6 @@
-# Gemini CLI VS Code Companion (`gemini-cli-vscode-ide-companion`)
+# Gravity-CLI VS Code Companion (`gemini-cli-vscode-ide-companion`)
 
-VS Code extension that pairs with Gemini CLI, providing direct IDE workspace
+VS Code extension that pairs with Gravity-CLI, providing direct IDE workspace
 access to the CLI agent.
 
 ## Architecture

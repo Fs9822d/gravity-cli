@@ -6,7 +6,7 @@ URLs, and apply that knowledge to your code.
 
 ## Prerequisites
 
-- Gemini CLI installed and authenticated.
+- Gravity-CLI installed and authenticated.
 - An internet connection.
 
 ## How to research new technologies

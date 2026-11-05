@@ -1,7 +1,7 @@
 # Release confidence strategy
 
 This document outlines the strategy for gaining confidence in every release of
-Gemini CLI. It serves as a checklist and quality gate for release manager to
+Gravity-CLI. It serves as a checklist and quality gate for release manager to
 ensure we are shipping a high-quality product.
 
 ## The goal
@@ -75,7 +75,7 @@ manually run through this checklist.
         `npm uninstall -g @google/gemini-cli`
   - [ ] Clear npx cache (optional but recommended): `npm cache clean --force`
   - [ ] Install the preview version: `npm install -g @google/gemini-cli@preview`
-  - [ ] Verify version: `gemini --version`
+  - [ ] Verify version: `gravity --version`
 
 - **Authentication:**
 
@@ -86,13 +86,13 @@ manually run through this checklist.
 
 - **Basic prompting:**
 
-  - [ ] Run `gemini "Tell me a joke"` and verify a sensible response.
-  - [ ] Run in interactive mode: `gemini`. Ask a follow-up question to test
+  - [ ] Run `gravity "Tell me a joke"` and verify a sensible response.
+  - [ ] Run in interactive mode: `gravity`. Ask a follow-up question to test
         context.
 
 - **Piped input:**
 
-  - [ ] Run `echo "Summarize this" | gemini` and verify it processes stdin.
+  - [ ] Run `echo "Summarize this" | gravity` and verify it processes stdin.
 
 - **Context management:**
 

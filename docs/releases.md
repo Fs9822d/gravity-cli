@@ -1,4 +1,4 @@
-# Gemini CLI releases
+# Gravity-CLI releases
 
 <!-- prettier-ignore -->
 > [!IMPORTANT]

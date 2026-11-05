@@ -1,7 +1,7 @@
 description="Injects context of all relevant cli files"
 prompt = """
 The following output contains the complete
-source code of the gemini cli library (`packages/cli`), and {packages/core} and representative test files
+source code of the Gravity-CLI library (`packages/cli`), and {packages/core} and representative test files
 (`packages/cli/src/ui/components/InputPrompt.test.tsx` and `packages/cli/src/ui/App.test.tsx`) that best conform to the project's testing standards.
 **Pay extremely close attention to these files.** They define the project's
 core architecture, component patterns, and testing standards.

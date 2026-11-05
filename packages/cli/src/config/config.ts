@@ -341,7 +341,7 @@ export async function parseArguments(
           type: 'string',
           skipValidation: true,
           description:
-            'Start Gemini in a new git worktree. If no name is provided, one is generated automatically.',
+            'Start Gravity in a new git worktree. If no name is provided, one is generated automatically.',
           coerce: (value: unknown): string => {
             const trimmed = typeof value === 'string' ? value.trim() : '';
             if (trimmed === '') {
@@ -437,8 +437,8 @@ export async function parseArguments(
           description:
             'Resume a previous session. Use "latest" for most recent or index number (e.g. --resume 5)',
           coerce: (value: string): string => {
-            // When --resume passed with a value (`gemini --resume 123`): value = "123" (string)
-            // When --resume passed without a value (`gemini --resume`): value = "" (string)
+            // When --resume passed with a value (`gravity --resume 123`): value = "123" (string)
+            // When --resume passed without a value (`gravity --resume`): value = "" (string)
             // When --resume not passed at all: this `coerce` function is not called at all, and
             //   `yargsInstance.argv.resume` is undefined.
             const trimmed = value.trim();

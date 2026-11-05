@@ -1,6 +1,6 @@
-# Gemini CLI Core (`@google/gemini-cli-core`)
+# Gravity-CLI Core (`@google/gemini-cli-core`)
 
-Backend logic for Gemini CLI: API orchestration, prompt construction, tool
+Backend logic for Gravity-CLI: API orchestration, prompt construction, tool
 execution, and agent management.
 
 ## Architecture

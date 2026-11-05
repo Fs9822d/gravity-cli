@@ -1,12 +1,12 @@
 # Plan tasks with todos
 
-Keep complex jobs on the rails with Gemini CLI's built-in task planning. In this
-guide, you'll learn how to ask for a plan, execute it step-by-step, and monitor
-progress with the todo list.
+Keep complex jobs on the rails with Gravity-CLI's built-in task planning. In
+this guide, you'll learn how to ask for a plan, execute it step-by-step, and
+monitor progress with the todo list.
 
 ## Prerequisites
 
-- Gemini CLI installed and authenticated.
+- Gravity-CLI installed and authenticated.
 - A complex task in mind (for example, a multi-file refactor or new feature).
 
 ## Why use task planning?

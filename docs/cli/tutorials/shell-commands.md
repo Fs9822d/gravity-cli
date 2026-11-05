@@ -6,7 +6,7 @@ automate complex workflows, and manage background processes safely.
 
 ## Prerequisites
 
-- Gemini CLI installed and authenticated.
+- Gravity-CLI installed and authenticated.
 - Basic familiarity with your system's shell (Bash, Zsh, PowerShell, and so on).
 
 ## How to run commands directly (`!`)
@@ -18,7 +18,7 @@ prefix.
 **Example:** `!ls -la`
 
 This executes `ls -la` immediately and prints the output to your terminal.
-Gemini CLI also records the command and its output in the current session
+Gravity-CLI also records the command and its output in the current session
 context, so the model can reference it in follow-up prompts. Very large outputs
 may be truncated.
 
@@ -30,7 +30,7 @@ pressing **Enter**. Now, everything you type is sent to the shell until you exit
 
 ## How to automate complex tasks
 
-You can automate tasks using a combination of Gemini CLI and shell commands.
+You can automate tasks using a combination of Gravity-CLI and shell commands.
 
 ### Scenario: Run tests and fix failures
 
@@ -70,14 +70,14 @@ This opens a dashboard where you can view logs or kill runaway processes.
 
 ## How to handle interactive commands
 
-Gemini CLI attempts to handle interactive commands (like `git add -p` or
+Gravity-CLI attempts to handle interactive commands (like `git add -p` or
 confirmation prompts) by streaming the output to you. However, for highly
 interactive tools (like `vim` or `top`), it's often better to run them yourself
 in a separate terminal window or use the `!` prefix.
 
 ## Safety features
 
-Giving an AI access to your shell is powerful but risky. Gemini CLI includes
+Giving an AI access to your shell is powerful but risky. Gravity-CLI includes
 several safety layers.
 
 ### Confirmation prompts
@@ -96,7 +96,7 @@ projects, we strongly recommend enabling Sandboxing. This runs all shell
 commands inside a secure Docker container.
 
 **Enable sandboxing:** Use the `--sandbox` flag when starting the CLI:
-`gemini --sandbox`.
+`gravity --sandbox`.
 
 ## Next steps
 

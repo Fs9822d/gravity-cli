@@ -6,7 +6,7 @@ for changes to system prompts, tool definitions, and other model-steering
 mechanisms, and as a tool for assessing feature reliability by model, and
 preventing regressions.
 
-> [!TIP] **Agent Automation**: If you are pair-programming with Gemini CLI, you
+> [!TIP] **Agent Automation**: If you are pair-programming with Gravity-CLI, you
 > can leverage the **behavioral-evals skill** to automate fixing failing tests
 > or promoting incubation candidates.
 
@@ -19,8 +19,8 @@ the model decide to write to disk when asked to save code?").
 
 They are also distinct from broad **industry benchmarks** (like SWE-bench).
 While benchmarks measure general capabilities across complex challenges, our
-behavioral evals focus on specific, granular behaviors relevant to the Gemini
-CLI's features.
+behavioral evals focus on specific, granular behaviors relevant to Gravity-CLI's
+features.
 
 ### Key Characteristics
 
@@ -138,7 +138,7 @@ describe('my_feature', () => {
 
 ## Running Evaluations
 
-First, build the bundled Gemini CLI. You must do this after every code change.
+First, build the bundled Gravity-CLI. You must do this after every code change.
 
 ```bash
 npm run build

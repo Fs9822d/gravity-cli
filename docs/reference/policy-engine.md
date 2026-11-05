@@ -1,6 +1,6 @@
 # Policy engine
 
-Gemini CLI includes a powerful policy engine that provides fine-grained control
+Gravity-CLI includes a powerful policy engine that provides fine-grained control
 over tool execution. It allows users and administrators to define rules that
 determine whether a tool call should be allowed, denied, or require user
 confirmation.
@@ -33,7 +33,7 @@ To create your first policy:
     decision = "deny"
     priority = 100
     ```
-3.  **Run a command** that triggers the policy (for example, ask Gemini CLI to
+3.  **Run a command** that triggers the policy (for example, ask Gravity-CLI to
     `rm -rf /`). The tool will now be blocked automatically.
 
 ## Core concepts
@@ -139,7 +139,7 @@ has a designated number that forms the base of the final priority calculation.
 
 | Tier      | Base | Description                                                                                   |
 | :-------- | :--- | :-------------------------------------------------------------------------------------------- |
-| Default   | 1    | Built-in policies that ship with Gemini CLI.                                                  |
+| Default   | 1    | Built-in policies that ship with Gravity-CLI.                                                 |
 | Extension | 2    | Policies defined in extensions.                                                               |
 | Workspace | 3    | **(Currently disabled)** Policies defined in the current workspace's configuration directory. |
 | User      | 4    | Custom policies defined by the user.                                                          |
@@ -485,8 +485,8 @@ deny_message = "Deep codebase analysis is restricted for this session."
 
 ## Default policies
 
-Gemini CLI ships with a set of default policies to provide a safe out-of-the-box
-experience.
+Gravity-CLI ships with a set of default policies to provide a safe
+out-of-the-box experience.
 
 - **Read-only tools** (like `read_file`, `glob`) are generally **allowed**.
 - **Agent delegation** defaults to **`ask_user`** to ensure remote agents can

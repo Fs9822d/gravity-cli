@@ -1,4 +1,4 @@
-# Gemini CLI Test Utils (`@google/gemini-cli-test-utils`)
+# Gravity-CLI Test Utils (`@google/gemini-cli-test-utils`)
 
 Shared test utilities used across the monorepo. This is a private package — not
 published to npm.

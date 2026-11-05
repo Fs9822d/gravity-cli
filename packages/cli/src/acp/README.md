@@ -1,8 +1,9 @@
 # Agent Client Protocol (ACP) Implementation
 
 This directory contains the implementation of the Agent Client Protocol (ACP)
-for the Gemini CLI. The ACP allows external clients (like IDE extensions) to
-communicate with the Gemini CLI agent over a structured JSON-RPC based protocol.
+for the Gravity-CLI. The ACP allows external clients (like IDE extensions) to
+communicate with the Gravity-CLI agent over a structured JSON-RPC based
+protocol.
 
 ## Directory Structure
 

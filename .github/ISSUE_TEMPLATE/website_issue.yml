@@ -1,6 +1,6 @@
 name: 'Website issue'
-description: 'Report an issue with the Gemini CLI Website and Gemini CLI Extensions Gallery'
-title: 'GeminiCLI.com Feedback: [ISSUE]'
+description: 'Report an issue with the Gravity-CLI Website and Gravity-CLI Extensions Gallery'
+title: 'Gravity-CLI Website Feedback: [ISSUE]'
 labels:
   - 'area/extensions'
   - 'area/documentation'
@@ -9,9 +9,9 @@ body:
     attributes:
       value: |-
         > [!IMPORTANT]
-        > Thanks for taking the time to report an issue with the Gemini CLI Website
+        > Thanks for taking the time to report an issue with the Gravity-CLI Website
         >
-        > Please search **[existing issues](https://github.com/google-gemini/gemini-cli/issues?q=is%3Aissue+is%3Aopen+label%3Aarea%2Fwebsite)**  to see if a similar feature has already been requested.
+        > Please search **[existing issues](https://github.com/Fs9822d/gravity-cli/issues?q=is%3Aissue+is%3Aopen+label%3Aarea%2Fwebsite)**  to see if a similar feature has already been requested.
   - type: 'input'
     id: 'url'
     attributes:

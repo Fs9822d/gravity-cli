@@ -1,108 +1,33 @@
-# Gemini CLI
+# Gravity-CLI
 
-[![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
-[![Gemini CLI E2E (Chained)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml)
-[![Version](https://img.shields.io/npm/v/@google/gemini-cli)](https://www.npmjs.com/package/@google/gemini-cli)
-[![License](https://img.shields.io/github/license/google-gemini/gemini-cli)](https://github.com/google-gemini/gemini-cli/blob/main/LICENSE)
-[![View Code Wiki](https://assets.codewiki.google/readme-badge/static.svg)](https://codewiki.google/github.com/google-gemini/gemini-cli?utm_source=badge&utm_medium=github&utm_campaign=github.com/google-gemini/gemini-cli)
+[![Gravity-CLI CI](https://github.com/Fs9822d/gravity-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/Fs9822d/gravity-cli/actions/workflows/ci.yml)
+[![Gravity-CLI E2E (Chained)](https://github.com/Fs9822d/gravity-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/Fs9822d/gravity-cli/actions/workflows/chained_e2e.yml)
+[![License](https://img.shields.io/github/license/Fs9822d/gravity-cli)](https://github.com/Fs9822d/gravity-cli/blob/main/LICENSE)
 
-<!-- prettier-ignore -->
-> [!IMPORTANT]
-> **Read before installing — Gemini CLI status & tool guide**
->
-> - **Enterprise Code Assist only:** Designed for **Gemini Code Assist Standard / Enterprise** licenses and **Code Assist for GitHub** on Google Cloud (your access remains unchanged).
-> - **No free tier or Google AI plans:** Free individual access and **Google AI Pro / Ultra** (Google One) moved to [Antigravity CLI](https://antigravity.google/product/antigravity-cli) on June 18, 2026 ([transition post](https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/)).
-> - **Not optimized for Gemini 4+:** Not tuned for the **Gemini 4** series (for example, [Gemini 4 Argon](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)) or future releases in this or later generations.
-> - **Not for model benchmarks:** Don't use Gemini CLI to benchmark Gemini models—its harness isn't tuned for Gemini 4+ and produces unrepresentative scores.
->
-> **Which Google CLI do you need?**
->
-> | Tool | Best for | Links |
-> | :--- | :--- | :--- |
-> | **[Antigravity CLI](https://antigravity.google/product/antigravity-cli)** (`agy`) | Interactive multi-agent coding terminal. Use for **Gemini 4 Argon**+, free / **Google AI Pro & Ultra** accounts, or Google Cloud. | [Download](https://antigravity.google/download) · [Migrate](https://antigravity.google/docs/cli/gcli-migration) · [Argon post](https://antigravity.google/blog/gemini-4-argon-in-google-antigravity) |
-> | **[Gemini API CLI](https://github.com/google-gemini/gemini-api-cli)** (`gemini-api`) | Stateless API CLI *(not a coding harness)*. Gives agents (`agy`, Claude Code, Codex), scripts, and CI direct commands for Gemini models, media gen, file analysis, and managed agents. | [GitHub](https://github.com/google-gemini/gemini-api-cli) · [Releases](https://github.com/google-gemini/gemini-api-cli/releases) · [API docs](https://ai.google.dev/gemini-api/docs) |
-> | **Gemini CLI** (`gemini`, *this repo*) | Organizations with **Gemini Code Assist Standard / Enterprise** or **Code Assist for GitHub** on Google Cloud *(plus legacy paid API / Vertex keys)*. | [Docs](https://geminicli.com/docs/) |
-
-Gemini CLI (`gemini`) is an open-source terminal agent maintained for enterprise
-Gemini Code Assist workflows on Google Cloud. Learn more in the
-[Gemini CLI documentation](https://geminicli.com/docs/).
+Gravity-CLI (`gravity`) is a modern AI terminal agent interface powered by
+Google Antigravity (`agy` ACP backend). It brings powerful multi-agent coding,
+terminal automation, and ACP integration directly into your developer workflows.
 
 ## 📦 Installation
 
-See
-[Gemini CLI installation, execution, and releases](https://www.geminicli.com/docs/get-started/installation)
-for recommended system specifications and a detailed installation guide.
-
 ### Quick Install
 
-#### Run instantly with npx
+Run directly from source or install locally:
 
 ```bash
-# Using npx (no installation required)
-npx @google/gemini-cli
-```
+# Clone the repository
+git clone https://github.com/Fs9822d/gravity-cli.git
+cd gravity-cli
 
-#### Install globally with npm
+# Install dependencies and build
+npm install
+npm run build
 
-```bash
-npm install -g @google/gemini-cli
-```
+# Run Gravity-CLI
+npm start
 
-#### Install globally with Homebrew (macOS/Linux)
-
-```bash
-brew install gemini-cli
-```
-
-#### Install globally with MacPorts (macOS)
-
-```bash
-sudo port install gemini-cli
-```
-
-#### Install with Anaconda (for restricted environments)
-
-```bash
-# Create and activate a new environment
-conda create -y -n gemini_env -c conda-forge nodejs
-conda activate gemini_env
-
-# Install Gemini CLI globally via npm (inside the environment)
-npm install -g @google/gemini-cli
-```
-
-## Release Channels
-
-See [Releases](https://www.geminicli.com/docs/changelogs) for more details.
-
-### Preview
-
-New preview releases will be published each week at UTC 23:59 on Tuesdays. These
-releases will not have been fully vetted and may contain regressions or other
-outstanding issues. Please help us test and install with `preview` tag.
-
-```bash
-npm install -g @google/gemini-cli@preview
-```
-
-### Stable
-
-- New stable releases will be published each week at UTC 20:00 on Tuesdays, this
-  will be the full promotion of last week's `preview` release + any bug fixes
-  and validations. Use `latest` tag.
-
-```bash
-npm install -g @google/gemini-cli@latest
-```
-
-### Nightly
-
-- New releases will be published each day at UTC 00:00. This will be all changes
-  from the main branch as represented at time of release. It should be assumed
-  there are pending validations and issues. Use `nightly` tag.
-
-```bash
-npm install -g @google/gemini-cli@nightly
+# Or link globally to run 'gravity' directly anywhere
+npm link ./packages/cli
 ```
 
 ## 📋 Key Features
@@ -132,7 +57,7 @@ Choose the authentication method that best fits your needs:
 ```bash
 # Set your Google Cloud Project
 export GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
-gemini
+gravity
 ```
 
 ### Option 2: Gemini API Key
@@ -147,7 +72,7 @@ gemini
 ```bash
 # Get your key from https://aistudio.google.com/apikey
 export GEMINI_API_KEY="YOUR_API_KEY"
-gemini
+gravity
 ```
 
 ### Option 3: Vertex AI
@@ -164,7 +89,7 @@ gemini
 # Get your key from Google Cloud Console
 export GOOGLE_API_KEY="YOUR_API_KEY"
 export GOOGLE_GENAI_USE_VERTEXAI=true
-gemini
+gravity
 ```
 
 For Google Workspace accounts and other authentication methods, see the
@@ -177,19 +102,19 @@ For Google Workspace accounts and other authentication methods, see the
 #### Start in current directory
 
 ```bash
-gemini
+gravity
 ```
 
 #### Include multiple directories
 
 ```bash
-gemini --include-directories ../lib,../docs
+gravity --include-directories ../lib,../docs
 ```
 
 #### Use specific model
 
 ```bash
-gemini -m gemini-2.5-flash
+gravity -m gemini-2.5-flash
 ```
 
 #### Non-interactive mode for scripts
@@ -197,21 +122,21 @@ gemini -m gemini-2.5-flash
 Get a simple text response:
 
 ```bash
-gemini -p "Explain the architecture of this codebase"
+gravity -p "Explain the architecture of this codebase"
 ```
 
 For more advanced scripting, including how to parse JSON and handle errors, use
 the `--output-format json` flag to get structured output:
 
 ```bash
-gemini -p "Explain the architecture of this codebase" --output-format json
+gravity -p "Explain the architecture of this codebase" --output-format json
 ```
 
 For real-time event streaming (useful for monitoring long-running operations),
 use `--output-format stream-json` to get newline-delimited JSON events:
 
 ```bash
-gemini -p "Run tests and deploy" --output-format stream-json
+gravity -p "Run tests and deploy" --output-format stream-json
 ```
 
 ### Quick Examples
@@ -220,16 +145,16 @@ gemini -p "Run tests and deploy" --output-format stream-json
 
 ```bash
 cd new-project/
-gemini
+gravity
 > Write me a Discord bot that answers questions using a FAQ.md file I will provide
 ```
 
 #### Analyze existing code
 
 ```bash
-git clone https://github.com/google-gemini/gemini-cli
-cd gemini-cli
-gemini
+git clone https://github.com/Fs9822d/gravity-cli
+cd gravity-cli
+gravity
 > Give me a summary of all of the changes that went in yesterday
 ```
 
@@ -253,7 +178,7 @@ gemini
 - [**Custom Commands**](https://www.geminicli.com/docs/cli/custom-commands) -
   Create your own reusable commands.
 - [**Context Files (GEMINI.md)**](https://www.geminicli.com/docs/cli/gemini-md) -
-  Provide persistent context to Gemini CLI.
+  Provide persistent context to Gravity-CLI.
 - [**Checkpointing**](https://www.geminicli.com/docs/cli/checkpointing) - Save
   and resume conversations.
 - [**Token Caching**](https://www.geminicli.com/docs/cli/token-caching) -
@@ -273,7 +198,7 @@ gemini
 ### Advanced Topics
 
 - [**Headless Mode (Scripting)**](https://www.geminicli.com/docs/cli/headless) -
-  Use Gemini CLI in automated workflows.
+  Use Gravity-CLI in automated workflows.
 - [**IDE Integration**](https://www.geminicli.com/docs/ide-integration) - VS
   Code companion.
 - [**Sandboxing & Security**](https://www.geminicli.com/docs/cli/sandbox) - Safe
@@ -299,7 +224,7 @@ gemini
 
 ### Using MCP Servers
 
-Configure MCP servers in `~/.gemini/settings.json` to extend Gemini CLI with
+Configure MCP servers in `~/.gemini/settings.json` to extend Gravity-CLI with
 custom tools:
 
 ```text
@@ -314,7 +239,7 @@ for setup instructions.
 
 ## 🤝 Contributing
 
-We welcome contributions! Gemini CLI is fully open source (Apache 2.0), and we
+We welcome contributions! Gravity-CLI is fully open source (Apache 2.0), and we
 encourage the community to:
 
 - Report bugs and suggest features.
@@ -325,8 +250,7 @@ encourage the community to:
 See our [Contributing Guide](./CONTRIBUTING.md) for development setup, coding
 standards, and how to submit pull requests.
 
-Check our [Official Roadmap](https://github.com/orgs/google-gemini/projects/11)
-for planned features and priorities.
+Check our [Official Roadmap](./ROADMAP.md) for planned features and priorities.
 
 ## 📖 Resources
 
@@ -335,11 +259,9 @@ for planned features and priorities.
 - **[Official Roadmap](./ROADMAP.md)** - See what's coming next.
 - **[Changelog](https://www.geminicli.com/docs/changelogs)** - See recent
   notable updates.
-- **[NPM Package](https://www.npmjs.com/package/@google/gemini-cli)** - Package
-  registry.
-- **[GitHub Issues](https://github.com/google-gemini/gemini-cli/issues)** -
-  Report bugs or request features.
-- **[Security Advisories](https://github.com/google-gemini/gemini-cli/security/advisories)** -
+- **[GitHub Issues](https://github.com/Fs9822d/gravity-cli/issues)** - Report
+  bugs or request features.
+- **[Security Advisories](https://github.com/Fs9822d/gravity-cli/security/advisories)** -
   Security updates.
 
 ### Uninstall
@@ -355,11 +277,11 @@ for removal instructions.
 - **Security**: [Security Policy](SECURITY.md)
 
 <p align="left">
- <a href="https://www.star-history.com/google-gemini/gemini-cli">
+ <a href="https://www.star-history.com/Fs9822d/gravity-cli">
   <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=google-gemini/gemini-cli&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=google-gemini/gemini-cli" />
-   <img alt="Star History Rank" src="https://api.star-history.com/badge?repo=google-gemini/gemini-cli" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=Fs9822d/gravity-cli&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=Fs9822d/gravity-cli&theme=light" />
+   <img alt="Star History Rank" src="https://api.star-history.com/badge?repo=Fs9822d/gravity-cli" />
   </picture>
  </a>
 </p>

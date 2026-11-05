@@ -43,7 +43,7 @@ export async function waitForUpdateCompletion(
   }
 
   debugLogger.log(
-    '\nGemini CLI is waiting for a background update to complete before restarting...',
+    '\nGravity-CLI is waiting for a background update to complete before restarting...',
   );
 
   return new Promise((resolve) => {

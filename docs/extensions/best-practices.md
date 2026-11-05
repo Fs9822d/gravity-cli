@@ -1,11 +1,11 @@
-# Gemini CLI extension best practices
+# Gravity-CLI extension best practices
 
 This guide covers best practices for developing, securing, and maintaining
-Gemini CLI extensions.
+Gravity-CLI extensions.
 
 ## Development
 
-Developing extensions for Gemini CLI is a lightweight, iterative process. Use
+Developing extensions for Gravity-CLI is a lightweight, iterative process. Use
 these strategies to build robust and efficient extensions.
 
 ### Structure your extension
@@ -33,12 +33,12 @@ my-extension/
 
 ### Iterate with `link`
 
-Use the `gemini extensions link` command to develop locally without reinstalling
-your extension after every change.
+Use the `gravity extensions link` command to develop locally without
+reinstalling your extension after every change.
 
 ```bash
 cd my-extension
-gemini extensions link .
+gravity extensions link .
 ```
 
 Changes to your code are immediately available in the CLI after you rebuild the
@@ -129,10 +129,10 @@ stability and the latest features.
 
 ```bash
 # Install the stable version (default branch)
-gemini extensions install github.com/user/repo
+gravity extensions install github.com/user/repo
 
 # Install the development version
-gemini extensions install github.com/user/repo --ref dev
+gravity extensions install github.com/user/repo --ref dev
 ```
 
 ### Clean artifacts
@@ -145,7 +145,7 @@ When using GitHub Releases, ensure your archives only contain necessary files
 
 Test your extension thoroughly before releasing it to users.
 
-- **Manual verification:** Use `gemini extensions link` to test your extension
+- **Manual verification:** Use `gravity extensions link` to test your extension
   in a live CLI session. Verify that tools appear in the debug console (F12) and
   that custom commands resolve correctly.
 - **Automated testing:** If your extension includes an MCP server, write unit
@@ -165,7 +165,7 @@ If your extension doesn't appear in `/extensions list`:
 - **Verify the name:** The `name` field in the manifest must match the extension
   directory name exactly.
 - **Restart the CLI:** Extensions are loaded at the start of a session. Restart
-  Gemini CLI after making changes to the manifest or linking a new extension.
+  Gravity-CLI after making changes to the manifest or linking a new extension.
 
 ### MCP server failures
 
@@ -174,7 +174,7 @@ If your tools aren't working as expected:
 - **Check the logs:** View the CLI logs to see if the MCP server failed to
   start.
 - **Test the command:** Run the server's `command` and `args` directly in your
-  terminal to ensure it starts correctly outside of Gemini CLI.
+  terminal to ensure it starts correctly outside of Gravity-CLI.
 - **Debug console:** In interactive mode, press **F12** to open the debug
   console and inspect tool calls and responses.
 

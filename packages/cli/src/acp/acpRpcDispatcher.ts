@@ -84,8 +84,8 @@ export class GeminiAgent {
       protocolVersion: acp.PROTOCOL_VERSION,
       authMethods,
       agentInfo: {
-        name: 'gemini-cli',
-        title: 'Gemini CLI',
+        name: 'gravity-cli',
+        title: 'Gravity-CLI',
         version,
       },
       agentCapabilities: {

@@ -6,8 +6,8 @@ in this project.
 ## Overview
 
 The integration tests are designed to validate the end-to-end functionality of
-Gemini CLI. They execute the built binary in a controlled environment and verify
-that it behaves as expected when interacting with the file system.
+Gravity-CLI. They execute the built binary in a controlled environment and
+verify that it behaves as expected when interacting with the file system.
 
 These tests are located in the `integration-tests` directory and are run using a
 custom test runner.
@@ -234,7 +234,7 @@ The verbose output is formatted to clearly identify the source of the logs:
 
 ```
 --- TEST: <log dir>:<test-name> ---
-... output from the gemini command ...
+... output from the gravity command ...
 --- END TEST: <log dir>:<test-name> ---
 ```
 
@@ -286,7 +286,7 @@ the integrations tests for pull requests against the `main` branch, or when a
 pull request is added to a merge queue.
 
 The workflow runs the tests in different sandboxing environments to ensure
-Gemini CLI is tested across each:
+Gravity-CLI is tested across each:
 
 - `sandbox:none`: Runs the tests without any sandboxing.
 - `sandbox:docker`: Runs the tests in a Docker container.

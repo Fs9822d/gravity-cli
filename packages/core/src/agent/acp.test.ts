@@ -15,6 +15,7 @@ import { AcpAgentProtocol } from './acp-agent-protocol.js';
 import type { AgentEvent } from './types.js';
 import type { ChildProcess } from 'node:child_process';
 import { EventEmitter, PassThrough } from 'node:stream';
+import fs from 'node:fs';
 
 describe('AcpProcessManager', () => {
   const originalEnv = { ...process.env };
@@ -38,6 +39,7 @@ describe('AcpProcessManager', () => {
   it('respects GRAVITY_AGY_PATH environment variable', () => {
     // If set to an executable that exists, it returns it
     const homeAgy = '/home/codespace/.local/bin/agy';
+    vi.spyOn(fs, 'existsSync').mockImplementation((p) => p === homeAgy);
     process.env['GRAVITY_AGY_PATH'] = homeAgy;
     const manager = new AcpProcessManager();
     expect(manager.findAgyExecutable()).toBe(homeAgy);

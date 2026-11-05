@@ -1,15 +1,15 @@
 # Managing Agent Skills
 
-Agent Skills provide Gemini CLI with specialized expertise on demand. This guide
-covers advanced management techniques, including using slash commands, terminal
-utilities, and understanding discovery tiers.
+Agent Skills provide Gravity-CLI with specialized expertise on demand. This
+guide covers advanced management techniques, including using slash commands,
+terminal utilities, and understanding discovery tiers.
 
 ## Discovery tiers
 
-Gemini CLI discovers skills from several locations, following a specific order
+Gravity-CLI discovers skills from several locations, following a specific order
 of precedence (lowest to highest):
 
-1.  **Built-in Skills**: Included with Gemini CLI and always available.
+1.  **Built-in Skills**: Included with Gravity-CLI and always available.
 2.  **Extension Skills**: Bundled within [extensions](../extensions/index.md).
 3.  **User Skills**: Located in `~/.gemini/skills/` or the `~/.agents/skills/`
     alias. These are available across all your projects.
@@ -37,7 +37,7 @@ available expertise.
 
 ## Terminal utilities
 
-The `gemini skills` command provides management utilities directly from your
+The `gravity skills` command provides management utilities directly from your
 system shell.
 
 ### Install a skill
@@ -45,7 +45,7 @@ system shell.
 To install a skill from a remote repository or a local `.skill` package:
 
 ```bash
-gemini skills install https://github.com/user/my-awesome-skill
+gravity skills install https://github.com/user/my-awesome-skill
 ```
 
 By default, this installs to your **user profile**. Use `--scope workspace` to
@@ -57,7 +57,7 @@ If you are developing a skill, use the `link` command to create a reference to
 your local directory:
 
 ```bash
-gemini skills link ./path/to/my-skill
+gravity skills link ./path/to/my-skill
 ```
 
 ### Uninstall a skill
@@ -65,7 +65,7 @@ gemini skills link ./path/to/my-skill
 To completely remove an installed or linked skill:
 
 ```bash
-gemini skills uninstall <name>
+gravity skills uninstall <name>
 ```
 
 ## Security and consent

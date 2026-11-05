@@ -1,6 +1,6 @@
 # Get started with Agent Skills
 
-Agent Skills extend Gemini CLI with specialized expertise. In this tutorial,
+Agent Skills extend Gravity-CLI with specialized expertise. In this tutorial,
 you'll learn how to create your first skill, bundle custom logic, and activate
 it during a session.
 
@@ -78,10 +78,10 @@ fetch(url, { method: 'HEAD' })
 
 ## Verify discovery
 
-Gemini CLI automatically discovers skills in the `.gemini/skills` directory (as
+Gravity-CLI automatically discovers skills in the `.gemini/skills` directory (as
 well as the `.agents/skills` alias).
 
-To check if Gemini CLI found your new skill, use the `/skills list` command
+To check if Gravity-CLI found your new skill, use the `/skills list` command
 within an interactive session:
 
 ```bash
@@ -142,11 +142,12 @@ The `skill-creator` will handle the directory structure and boilerplate for you.
 
 ## Manage skills
 
-You can also manage skills using the `gemini skills` command from your terminal:
+You can also manage skills using the `gravity skills` command from your
+terminal:
 
-- **Install**: `gemini skills install <url-or-path>`
-- **Link**: `gemini skills link <path>` (useful for local development)
-- **Uninstall**: `gemini skills uninstall <name>`
+- **Install**: `gravity skills install <url-or-path>`
+- **Link**: `gravity skills link <path>` (useful for local development)
+- **Uninstall**: `gravity skills uninstall <name>`
 
 ## Next steps
 

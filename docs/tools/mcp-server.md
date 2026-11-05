@@ -1,7 +1,7 @@
-# MCP servers with Gemini CLI
+# MCP servers with Gravity-CLI
 
 This document provides a guide to configuring and using Model Context Protocol
-(MCP) servers with Gemini CLI.
+(MCP) servers with Gravity-CLI.
 
 ## What is an MCP server?
 
@@ -10,7 +10,7 @@ CLI through the Model Context Protocol, allowing it to interact with external
 systems and data sources. MCP servers act as a bridge between the Gemini model
 and your local environment or other services like APIs.
 
-An MCP server enables Gemini CLI to:
+An MCP server enables Gravity-CLI to:
 
 - **Discover tools:** List available tools, their descriptions, and parameters
   through standardized schema definitions.
@@ -19,13 +19,13 @@ An MCP server enables Gemini CLI to:
 - **Access resources:** Read data from specific resources that the server
   exposes (files, API payloads, reports, etc.).
 
-With an MCP server, you can extend Gemini CLI's capabilities to perform actions
+With an MCP server, you can extend Gravity-CLI's capabilities to perform actions
 beyond its built-in features, such as interacting with databases, APIs, custom
 scripts, or specialized workflows.
 
 ## Core integration architecture
 
-Gemini CLI integrates with MCP servers through a sophisticated discovery and
+Gravity-CLI integrates with MCP servers through a sophisticated discovery and
 execution system built into the core package (`packages/core/src/tools/`):
 
 ### Discovery Layer (`mcp-client.ts`)
@@ -54,7 +54,7 @@ Each discovered MCP tool is wrapped in a `DiscoveredMCPTool` instance that:
 
 ### Transport mechanisms
 
-Gemini CLI supports three MCP transport types:
+Gravity-CLI supports three MCP transport types:
 
 - **Stdio Transport:** Spawns a subprocess and communicates via stdin/stdout
 - **SSE Transport:** Connects to Server-Sent Events endpoints
@@ -63,7 +63,7 @@ Gemini CLI supports three MCP transport types:
 ## Working with MCP resources
 
 Some MCP servers expose contextual “resources” in addition to the tools and
-prompts. Gemini CLI discovers these automatically and gives you the possibility
+prompts. Gravity-CLI discovers these automatically and gives you the possibility
 to reference them in the chat. For more information on the tools used to
 interact with these resources, see [MCP resource tools](mcp-resources.md).
 
@@ -89,7 +89,7 @@ in the conversation.
 
 ## How to set up your MCP server
 
-Gemini CLI uses the `mcpServers` configuration in your `settings.json` file to
+Gravity-CLI uses the `mcpServers` configuration in your `settings.json` file to
 locate and connect to MCP servers. This configuration supports multiple servers
 with different transport mechanisms.
 
@@ -189,7 +189,7 @@ Each server configuration supports the following properties:
 
 ### Environment variable expansion
 
-Gemini CLI automatically expands environment variables in the `env` block of
+Gravity-CLI automatically expands environment variables in the `env` block of
 your MCP server configuration. This lets you securely reference variables
 defined in your shell or environment without hardcoding sensitive information
 directly in your `settings.json` file.
@@ -215,7 +215,7 @@ string.
 
 ### Security and environment sanitization
 
-To protect your credentials, Gemini CLI performs environment sanitization when
+To protect your credentials, Gravity-CLI performs environment sanitization when
 spawning MCP server processes.
 
 #### Automatic redaction
@@ -270,8 +270,8 @@ specific data with that server.
 
 ### OAuth support for remote MCP servers
 
-Gemini CLI supports OAuth 2.0 authentication for remote MCP servers using SSE or
-HTTP transports. This enables secure access to MCP servers that require
+Gravity-CLI supports OAuth 2.0 authentication for remote MCP servers using SSE
+or HTTP transports. This enables secure access to MCP servers that require
 authentication.
 
 #### Automatic OAuth discovery
@@ -326,7 +326,7 @@ This feature will not work in:
 
 <!-- prettier-ignore -->
 > [!IMPORTANT]
-> Gemini CLI validates the `iss` (issuer) parameter in OAuth authorization
+> Gravity-CLI validates the `iss` (issuer) parameter in OAuth authorization
 > responses per [RFC 9207](https://www.rfc-editor.org/rfc/rfc9207) and the MCP
 > specification:
 >
@@ -340,7 +340,7 @@ This feature will not work in:
 >   `authorization_response_iss_parameter_supported` or sets it to `false` (for
 >   example, providers that do not declare RFC 9207 support), callbacks without
 >   `iss` are accepted.
-> - When you configure `issuer` explicitly in `settings.json` and Gemini CLI
+> - When you configure `issuer` explicitly in `settings.json` and Gravity-CLI
 >   doesn't discover authorization server metadata, the callback redirect
 >   **must** include the `iss` parameter. To accept callbacks without `iss` for
 >   such a server, set `authorizationResponseIssParameterSupported` to `false`
@@ -391,10 +391,10 @@ If your remote MCP server uses an authorization server with a known issuer URL:
 }
 ```
 
-With this configuration, Gemini CLI requires the `iss` parameter in the
+With this configuration, Gravity-CLI requires the `iss` parameter in the
 authorization callback. If the authorization server doesn't return `iss` in its
 redirects, add `"authorizationResponseIssParameterSupported": false` to the
-`oauth` block. Gemini CLI then accepts callbacks without `iss` while still
+`oauth` block. Gravity-CLI then accepts callbacks without `iss` while still
 rejecting any `iss` value that doesn't match the configured `issuer`.
 
 #### Managing OAuth authentication
@@ -644,7 +644,7 @@ then be used to authenticate with the MCP server.
 
 ## Discovery process deep dive
 
-When Gemini CLI starts, it performs MCP server discovery through the following
+When Gravity-CLI starts, it performs MCP server discovery through the following
 detailed process:
 
 ### 1. Server iteration and connection
@@ -851,8 +851,8 @@ The MCP integration tracks several states:
 
 If an MCP server is provided by an extension (for example, the
 `google-workspace` extension), you can still override its settings in your local
-`settings.json`. Gemini CLI merges your local configuration with the extension's
-defaults:
+`settings.json`. Gravity-CLI merges your local configuration with the
+extension's defaults:
 
 - **Tool lists:** Tool lists are merged securely to ensure the most restrictive
   policy wins:
@@ -967,7 +967,7 @@ defaults:
 - **Access tokens:** Be security-aware when configuring environment variables
   containing API keys or tokens. See
   [Security and environment sanitization](#security-and-environment-sanitization)
-  for details on how Gemini CLI protects your credentials.
+  for details on how Gravity-CLI protects your credentials.
 - **Sandbox compatibility:** When using sandboxing, ensure MCP servers are
   available within the sandbox environment
 - **Private data:** Using broadly scoped personal access tokens can lead to
@@ -994,7 +994,7 @@ defaults:
   through automatic prefixing
 
 This comprehensive integration makes MCP servers a powerful way to extend the
-Gemini CLI's capabilities while maintaining security, reliability, and ease of
+Gravity-CLI's capabilities while maintaining security, reliability, and ease of
 use.
 
 ## Returning rich content from tools
@@ -1014,7 +1014,7 @@ To return rich content, your tool's response must adhere to the MCP
 specification for a
 [`CallToolResult`](https://modelcontextprotocol.io/specification/2025-06-18/server/tools#tool-result).
 The `content` field of the result should be an array of `ContentBlock` objects.
-Gemini CLI will correctly process this array, separating text from binary data
+Gravity-CLI will correctly process this array, separating text from binary data
 and packaging it for the model.
 
 You can mix and match different content block types in the `content` array. The
@@ -1051,7 +1051,7 @@ text description and an image:
 }
 ```
 
-When Gemini CLI receives this response, it will:
+When Gravity-CLI receives this response, it will:
 
 1.  Extract all the text and combine it into a single `functionResponse` part
     for the model.
@@ -1065,8 +1065,8 @@ context to the Gemini model.
 ## MCP prompts as slash commands
 
 In addition to tools, MCP servers can expose predefined prompts that can be
-executed as slash commands within Gemini CLI. This lets you create shortcuts for
-common or complex queries that can be easily invoked by name.
+executed as slash commands within Gravity-CLI. This lets you create shortcuts
+for common or complex queries that can be easily invoked by name.
 
 ### Defining prompts on the server
 
@@ -1125,30 +1125,30 @@ Once a prompt is discovered, you can invoke it using its name as a slash
 command. The CLI will automatically handle parsing arguments.
 
 ```bash
-/poem-writer --title="Gemini CLI" --mood="reverent"
+/poem-writer --title="Gravity-CLI" --mood="reverent"
 ```
 
 or, using positional arguments:
 
 ```bash
-/poem-writer "Gemini CLI" reverent
+/poem-writer "Gravity-CLI" reverent
 ```
 
-When you run this command, Gemini CLI executes the `prompts/get` method on the
+When you run this command, Gravity-CLI executes the `prompts/get` method on the
 MCP server with the provided arguments. The server is responsible for
 substituting the arguments into the prompt template and returning the final
 prompt text. The CLI then sends this prompt to the model for execution. This
 provides a convenient way to automate and share common workflows.
 
-## Managing MCP servers with `gemini mcp`
+## Managing MCP servers with `gravity mcp`
 
 While you can always configure MCP servers by manually editing your
-`settings.json` file, Gemini CLI provides a convenient set of commands to manage
-your server configurations programmatically. These commands streamline the
-process of adding, listing, and removing MCP servers without needing to directly
-edit JSON files.
+`settings.json` file, Gravity-CLI provides a convenient set of commands to
+manage your server configurations programmatically. These commands streamline
+the process of adding, listing, and removing MCP servers without needing to
+directly edit JSON files.
 
-### Adding a server (`gemini mcp add`)
+### Adding a server (`gravity mcp add`)
 
 The `add` command configures a new MCP server in your `settings.json`. Based on
 the scope (`-s, --scope`), it will be added to either the user config
@@ -1157,7 +1157,7 @@ the scope (`-s, --scope`), it will be added to either the user config
 **Command:**
 
 ```bash
-gemini mcp add [options] <name> <commandOrUrl> [args...]
+gravity mcp add [options] <name> <commandOrUrl> [args...]
 ```
 
 - `<name>`: A unique name for the server.
@@ -1184,13 +1184,13 @@ This is the default transport for running local servers.
 
 ```bash
 # Basic syntax
-gemini mcp add [options] <name> <command> [args...]
+gravity mcp add [options] <name> <command> [args...]
 
 # Example: Adding a local server
-gemini mcp add -e API_KEY=123 -e DEBUG=true my-stdio-server /path/to/server arg1 arg2 arg3
+gravity mcp add -e API_KEY=123 -e DEBUG=true my-stdio-server /path/to/server arg1 arg2 arg3
 
 # Example: Adding a local python server
-gemini mcp add python-server python server.py -- --server-arg my-value
+gravity mcp add python-server python server.py -- --server-arg my-value
 ```
 
 #### Adding an HTTP server
@@ -1199,13 +1199,13 @@ This transport is for servers that use the streamable HTTP transport.
 
 ```bash
 # Basic syntax
-gemini mcp add --transport http <name> <url>
+gravity mcp add --transport http <name> <url>
 
 # Example: Adding an HTTP server
-gemini mcp add --transport http http-server https://api.example.com/mcp/
+gravity mcp add --transport http http-server https://api.example.com/mcp/
 
 # Example: Adding an HTTP server with an authentication header
-gemini mcp add --transport http --header "Authorization: Bearer abc123" secure-http https://api.example.com/mcp/
+gravity mcp add --transport http --header "Authorization: Bearer abc123" secure-http https://api.example.com/mcp/
 ```
 
 #### Adding an SSE server
@@ -1214,16 +1214,16 @@ This transport is for servers that use Server-Sent Events (SSE).
 
 ```bash
 # Basic syntax
-gemini mcp add --transport sse <name> <url>
+gravity mcp add --transport sse <name> <url>
 
 # Example: Adding an SSE server
-gemini mcp add --transport sse sse-server https://api.example.com/sse/
+gravity mcp add --transport sse sse-server https://api.example.com/sse/
 
 # Example: Adding an SSE server with an authentication header
-gemini mcp add --transport sse --header "Authorization: Bearer abc123" secure-sse https://api.example.com/sse/
+gravity mcp add --transport sse --header "Authorization: Bearer abc123" secure-sse https://api.example.com/sse/
 ```
 
-### Listing servers (`gemini mcp list`)
+### Listing servers (`gravity mcp list`)
 
 To view all MCP servers currently configured, use the `list` command. It
 displays each server's name, configuration details, and connection status. This
@@ -1232,7 +1232,7 @@ command has no flags.
 **Command:**
 
 ```bash
-gemini mcp list
+gravity mcp list
 ```
 
 <!-- prettier-ignore -->
@@ -1240,7 +1240,7 @@ gemini mcp list
 > For security, `stdio` MCP servers (those using the
 > `command` property) are only tested and displayed as "Connected" if the
 > current folder is trusted. If the folder is untrusted, they will show as
-> "Disconnected". Use `gemini trust` to trust the current folder.
+> "Disconnected". Use `gravity trust` to trust the current folder.
 
 **Example output:**
 
@@ -1264,10 +1264,10 @@ re-enabled when:
 2.  The model attempts to execute a tool from that server.
 3.  You invoke an MCP prompt from that server.
 
-You can also use `gemini mcp list` from your shell to see connection errors for
+You can also use `gravity mcp list` from your shell to see connection errors for
 all configured servers.
 
-### Removing a server (`gemini mcp remove`)
+### Removing a server (`gravity mcp remove`)
 
 To delete a server from your configuration, use the `remove` command with the
 server's name.
@@ -1275,7 +1275,7 @@ server's name.
 **Command:**
 
 ```bash
-gemini mcp remove <name>
+gravity mcp remove <name>
 ```
 
 **Options (flags):**
@@ -1285,13 +1285,13 @@ gemini mcp remove <name>
 **Example:**
 
 ```bash
-gemini mcp remove my-server
+gravity mcp remove my-server
 ```
 
 This will find and delete the "my-server" entry from the `mcpServers` object in
 the appropriate `settings.json` file based on the scope (`-s, --scope`).
 
-### Enabling/disabling a server (`gemini mcp enable`, `gemini mcp disable`)
+### Enabling/disabling a server (`gravity mcp enable`, `gravity mcp disable`)
 
 Temporarily disable an MCP server without removing its configuration, or
 re-enable a previously disabled server.
@@ -1299,8 +1299,8 @@ re-enable a previously disabled server.
 **Commands:**
 
 ```bash
-gemini mcp enable <name> [--session]
-gemini mcp disable <name> [--session]
+gravity mcp enable <name> [--session]
+gravity mcp disable <name> [--session]
 ```
 
 **Options (flags):**
@@ -1316,6 +1316,6 @@ The same commands are available as slash commands during an active session:
 
 ## Instructions
 
-Gemini CLI supports
+Gravity-CLI supports
 [MCP server instructions](https://modelcontextprotocol.io/specification/2025-06-18/schema#initializeresult),
 which will be appended to the system instructions.

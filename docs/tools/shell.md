@@ -49,7 +49,7 @@ The tool returns a JSON object containing:
 ## Configuration
 
 You can configure the behavior of the `run_shell_command` tool by modifying your
-`settings.json` file or by using the `/settings` command in Gemini CLI.
+`settings.json` file or by using the `/settings` command in Gravity-CLI.
 
 ### Enabling interactive commands
 
@@ -133,7 +133,7 @@ including complex TUIs, will be rendered correctly.
 
 When `run_shell_command` executes a command, it sets the `GEMINI_CLI=1`
 environment variable in the subprocess's environment. This allows scripts or
-tools to detect if they are being run from within Gemini CLI.
+tools to detect if they are being run from within Gravity-CLI.
 
 ## Command restrictions
 

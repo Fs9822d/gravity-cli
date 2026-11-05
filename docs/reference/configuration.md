@@ -1,6 +1,6 @@
-# Gemini CLI configuration
+# Gravity-CLI configuration
 
-Gemini CLI offers several ways to configure its behavior, including environment
+Gravity-CLI offers several ways to configure its behavior, including environment
 variables, command-line arguments, and settings files. This document outlines
 the different configuration methods and available settings.
 
@@ -22,8 +22,8 @@ overridden by higher numbers):
 
 ## Settings files
 
-Gemini CLI uses JSON settings files for persistent configuration. There are four
-locations for these files:
+Gravity-CLI uses JSON settings files for persistent configuration. There are
+four locations for these files:
 
 <!-- prettier-ignore -->
 > [!TIP]
@@ -43,11 +43,11 @@ locations for these files:
     user, project, or system override settings.
 - **User settings file:**
   - **Location:** `~/.gemini/settings.json` (where `~` is your home directory).
-  - **Scope:** Applies to all Gemini CLI sessions for the current user. User
+  - **Scope:** Applies to all Gravity-CLI sessions for the current user. User
     settings override system defaults.
 - **Project settings file:**
   - **Location:** `.gemini/settings.json` within your project's root directory.
-  - **Scope:** Applies only when running Gemini CLI from that specific project.
+  - **Scope:** Applies only when running Gravity-CLI from that specific project.
     Project settings override user settings and system defaults.
 - **System settings file:**
   - **Location:** `/etc/gemini-cli/settings.json` (Linux),
@@ -55,10 +55,10 @@ locations for these files:
     `/Library/Application Support/GeminiCli/settings.json` (macOS). The path can
     be overridden using the `GEMINI_CLI_SYSTEM_SETTINGS_PATH` environment
     variable.
-  - **Scope:** Applies to all Gemini CLI sessions on the system, for all users.
+  - **Scope:** Applies to all Gravity-CLI sessions on the system, for all users.
     System settings act as overrides, taking precedence over all other settings
     files. May be useful for system administrators at enterprises to have
-    controls over users' Gemini CLI setups.
+    controls over users' Gravity-CLI setups.
 
 **Note on environment variables in settings:** String values within your
 `settings.json` and `gemini-extension.json` files can reference environment
@@ -75,14 +75,15 @@ evaluated before any `.env` file is loaded, so they can only reference variables
 from your shell environment. Additionally, each extension can have its own
 `.env` file in its directory, which will be loaded automatically.
 
-**Note for Enterprise Users:** For guidance on deploying and managing Gemini CLI
-in a corporate environment, see the
+**Note for Enterprise Users:** For guidance on deploying and managing
+Gravity-CLI in a corporate environment, see the
 [Enterprise Configuration](../cli/enterprise.md) documentation.
 
 ### The `.gemini` directory in your project
 
 In addition to a project settings file, a project's `.gemini` directory can
-contain other project-specific files related to Gemini CLI's operation, such as:
+contain other project-specific files related to Gravity-CLI's operation, such
+as:
 
 - [Custom sandbox profiles](#sandboxing) (for example,
   `.gemini/sandbox-macos-custom.sb`, `.gemini/sandbox.Dockerfile`).
@@ -296,8 +297,8 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`ui.showStatusInTitle`** (boolean):
 
-  - **Description:** Show Gemini CLI model thoughts in the terminal window title
-    during the working phase
+  - **Description:** Show Gravity-CLI model thoughts in the terminal window
+    title during the working phase
   - **Default:** `false`
 
 - **`ui.dynamicWindowTitle`** (boolean):
@@ -308,7 +309,7 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`ui.showHomeDirectoryWarning`** (boolean):
 
-  - **Description:** Show a warning when running Gemini CLI in the home
+  - **Description:** Show a warning when running Gravity-CLI in the home
     directory.
   - **Default:** `true`
   - **Requires restart:** Yes
@@ -2213,7 +2214,7 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`experimental.gemmaModelRouter.autoStartServer`** (boolean):
 
-  - **Description:** Automatically start the LiteRT-LM server when Gemini CLI
+  - **Description:** Automatically start the LiteRT-LM server when Gravity-CLI
     starts and the Gemma router is enabled.
   - **Default:** `false`
   - **Requires restart:** Yes
@@ -2484,7 +2485,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `mcpServers`
 
 Configures connections to one or more Model-Context Protocol (MCP) servers for
-discovering and using custom tools. Gemini CLI attempts to connect to each
+discovering and using custom tools. Gravity-CLI attempts to connect to each
 configured MCP server to discover available tools. Every discovered tool is
 prepended with the `mcp_` prefix and its server alias to form a fully qualified
 name (FQN) (for example, `mcp_serverAlias_actualToolName`) to avoid conflicts.
@@ -2535,7 +2536,7 @@ must be provided. If multiple are specified, the order of precedence is
 
 #### `telemetry`
 
-Configures logging and metrics collection for Gemini CLI. For more information,
+Configures logging and metrics collection for Gravity-CLI. For more information,
 see [Telemetry](../cli/telemetry.md).
 
 - **Properties:**
@@ -2682,11 +2683,11 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
     of the default `~/.gemini/`.
 - **`GEMINI_CLI_IDE_PID`**:
   - Manually specifies the PID of the IDE process to use for integration. This
-    is useful when running Gemini CLI in a standalone terminal while still
+    is useful when running Gravity-CLI in a standalone terminal while still
     wanting to associate it with a specific IDE instance.
   - Overrides the automatic IDE detection logic.
 - **`GEMINI_CLI_HOME`**:
-  - Specifies the root directory for Gemini CLI's user-level configuration and
+  - Specifies the root directory for Gravity-CLI's user-level configuration and
     storage.
   - By default, this is the user's system home directory. The CLI will create a
     `.gemini` folder inside this directory.
@@ -2831,10 +2832,10 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
 
 ### Environment variable redaction
 
-To prevent accidental leakage of sensitive information, Gemini CLI automatically
-redacts potential secrets from environment variables when executing tools (such
-as shell commands). This "best effort" redaction applies to variables inherited
-from the system or loaded from `.env` files.
+To prevent accidental leakage of sensitive information, Gravity-CLI
+automatically redacts potential secrets from environment variables when
+executing tools (such as shell commands). This "best effort" redaction applies
+to variables inherited from the system or loaded from `.env` files.
 
 **Default Redaction Rules:**
 
@@ -2887,7 +2888,7 @@ for that specific session.
 - **`--allowed-tools <tool1,tool2,...>`**:
   - A comma-separated list of tool names that will bypass the confirmation
     dialog.
-  - Example: `gemini --allowed-tools "ShellTool(git status)"`
+  - Example: `gravity --allowed-tools "ShellTool(git status)"`
 - **`--approval-mode <mode>`**:
   - Sets the approval mode for tool calls. Available modes:
     - `default`: Prompt for approval on each tool call (default behavior)
@@ -2900,7 +2901,7 @@ for that specific session.
       > functional.
   - Cannot be used together with `--yolo`. Use `--approval-mode=yolo` instead of
     `--yolo` for the new unified approach.
-  - Example: `gemini --approval-mode auto_edit`
+  - Example: `gravity --approval-mode auto_edit`
 - **`--debug`** (**`-d`**):
   - Enables debug mode for this session, providing more verbose output. Open the
     debug console with F12 to see the additional logging.
@@ -2908,13 +2909,13 @@ for that specific session.
   - Delete a specific chat session by its index number or full session UUID.
   - Use `--list-sessions` first to see available sessions, their indices, and
     UUIDs.
-  - Example: `gemini --delete-session 3` or
-    `gemini --delete-session a1b2c3d4-e5f6-7890-abcd-ef1234567890`
+  - Example: `gravity --delete-session 3` or
+    `gravity --delete-session a1b2c3d4-e5f6-7890-abcd-ef1234567890`
 - **`--extensions <extension_name ...>`** (**`-e <extension_name ...>`**):
   - Specifies a list of extensions to use for the session. If not provided, all
     available extensions are used.
-  - Use the special term `gemini -e none` to disable all extensions.
-  - Example: `gemini -e my-extension -e my-other-extension`
+  - Use the special term `gravity -e none` to disable all extensions.
+  - Example: `gravity -e my-extension -e my-other-extension`
 - **`--fake-responses`**:
   - Path to a file with fake model responses for testing.
 - **`--help`** (or **`-h`**):
@@ -2932,7 +2933,7 @@ for that specific session.
   - List all available chat sessions for the current project and exit.
   - Shows session indices, dates, message counts, and preview of first user
     message.
-  - Example: `gemini --list-sessions`
+  - Example: `gravity --list-sessions`
 - **`--model <model_name>`** (**`-m <model_name>`**):
   - Specifies the Gemini model to use for this session.
   - Example: `npm start -- --model gemini-3-pro-preview`
@@ -2946,21 +2947,22 @@ for that specific session.
   - **Note:** For structured output and scripting, use the
     `--output-format json` or `--output-format stream-json` flag.
 - **`--prompt <your_prompt>`** (**`-p <your_prompt>`**):
-  - Used to pass a prompt directly to the command. This invokes Gemini CLI in a
+  - Used to pass a prompt directly to the command. This invokes Gravity-CLI in a
     non-interactive mode.
 - **`--prompt-interactive <your_prompt>`** (**`-i <your_prompt>`**):
   - Starts an interactive session with the provided prompt as the initial input.
   - The prompt is processed within the interactive session, not before it.
   - Cannot be used when piping input from stdin.
-  - Example: `gemini -i "explain this code"`
+  - Example: `gravity -i "explain this code"`
 - **`--record-responses`**:
   - Path to a file to record model responses for testing.
 - **`--resume [session_id]`** (**`-r [session_id]`**):
   - Resume a previous chat session. Use "latest" for the most recent session,
     provide a session index number, or provide a full session UUID.
   - If no session_id is provided, defaults to "latest".
-  - Example: `gemini --resume 5` or `gemini --resume latest` or
-    `gemini --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890` or `gemini --resume`
+  - Example: `gravity --resume 5` or `gravity --resume latest` or
+    `gravity --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890` or
+    `gravity --resume`
   - See [Session Management](../cli/session-management.md) for more details.
 - **`--sandbox`** (**`-s`**):
   - Enables sandbox mode for this session.
@@ -3073,11 +3075,11 @@ conventions and context.
 
 By understanding and utilizing these configuration layers and the hierarchical
 nature of context files, you can effectively manage the AI's memory and tailor
-Gemini CLI's responses to your specific needs and projects.
+Gravity-CLI's responses to your specific needs and projects.
 
 ## Sandboxing
 
-Gemini CLI can execute potentially unsafe operations (like shell commands and
+Gravity-CLI can execute potentially unsafe operations (like shell commands and
 file modifications) within a sandboxed environment to protect your system.
 
 Sandboxing is disabled by default, but you can enable it in a few ways:
@@ -3106,22 +3108,22 @@ FROM gemini-cli-sandbox
 ```
 
 When `.gemini/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
-environment variable when running Gemini CLI to automatically build the custom
+environment variable when running Gravity-CLI to automatically build the custom
 sandbox image:
 
 ```bash
-BUILD_SANDBOX=1 gemini -s
+BUILD_SANDBOX=1 gravity -s
 ```
 
 Building a custom sandbox with `BUILD_SANDBOX` is only supported when running
-Gemini CLI from source. If you installed the CLI with npm, build the Docker
+Gravity-CLI from source. If you installed the CLI with npm, build the Docker
 image separately and reference that image in your sandbox configuration.
 
 ## Usage statistics
 
-To help us improve Gemini CLI, we collect anonymized usage statistics. This data
-helps us understand how the CLI is used, identify common issues, and prioritize
-new features.
+To help us improve Gravity-CLI, we collect anonymized usage statistics. This
+data helps us understand how the CLI is used, identify common issues, and
+prioritize new features.
 
 **What we collect:**
 

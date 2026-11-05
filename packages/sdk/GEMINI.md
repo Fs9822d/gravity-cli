@@ -1,6 +1,6 @@
-# Gemini CLI SDK (`@google/gemini-cli-sdk`)
+# Gravity-CLI SDK (`@google/gemini-cli-sdk`)
 
-Programmatic SDK for embedding Gemini CLI agent capabilities into other
+Programmatic SDK for embedding Gravity-CLI agent capabilities into other
 applications.
 
 ## Architecture

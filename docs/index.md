@@ -1,8 +1,8 @@
-# Gemini CLI documentation
+# Gravity-CLI documentation
 
-Gemini CLI brings the power of Gemini models directly into your terminal. Use it
-to understand code, automate tasks, and build workflows with your local project
-context.
+Gravity-CLI brings the power of Gemini models directly into your terminal. Use
+it to understand code, automate tasks, and build workflows with your local
+project context.
 
 ## Install
 
@@ -12,19 +12,19 @@ npm install -g @google/gemini-cli
 
 ## Get started
 
-Jump in to Gemini CLI.
+Jump in to Gravity-CLI.
 
-- **[Quickstart](./get-started/index.md):** Your first session with Gemini CLI.
-- **[Installation](./get-started/installation.mdx):** How to install Gemini CLI
+- **[Quickstart](./get-started/index.md):** Your first session with Gravity-CLI.
+- **[Installation](./get-started/installation.mdx):** How to install Gravity-CLI
   on your system.
 - **[Authentication](./get-started/authentication.mdx):** Setup instructions for
   personal and enterprise accounts.
 - **[CLI cheatsheet](./cli/cli-reference.md):** A quick reference for common
   commands and options.
-- **[Gemini 3 on Gemini CLI](./get-started/gemini-3.md):** Learn about Gemini 3
-  support in Gemini CLI.
+- **[Gemini 3 on Gravity-CLI](./get-started/gemini-3.md):** Learn about Gemini 3
+  support in Gravity-CLI.
 
-## Use Gemini CLI
+## Use Gravity-CLI
 
 User-focused guides and tutorials for daily development workflows.
 
@@ -48,16 +48,16 @@ User-focused guides and tutorials for daily development workflows.
 
 ## Features
 
-Technical documentation for each capability of Gemini CLI.
+Technical documentation for each capability of Gravity-CLI.
 
-- **[Extensions](./extensions/index.md):** Extend Gemini CLI with new tools and
+- **[Extensions](./extensions/index.md):** Extend Gravity-CLI with new tools and
   capabilities.
 - **[Agent Skills](./cli/skills.md):** Use specialized agents for specific
   tasks.
 - **[Checkpointing](./cli/checkpointing.md):** Automatic session snapshots.
 - **[Headless mode](./cli/headless.md):** Programmatic and scripting interface.
-- **[Hooks](./hooks/index.md):** Customize Gemini CLI behavior with scripts.
-- **[IDE integration](./ide-integration/index.md):** Integrate Gemini CLI with
+- **[Hooks](./hooks/index.md):** Customize Gravity-CLI behavior with scripts.
+- **[IDE integration](./ide-integration/index.md):** Integrate Gravity-CLI with
   your favorite IDE.
 - **[MCP servers](./tools/mcp-server.md):** Connect to and use remote agents.
 - **[Model routing](./cli/model-routing.md):** Automatic fallback resilience.
@@ -76,7 +76,7 @@ Technical documentation for each capability of Gemini CLI.
 
 ## Configuration
 
-Settings and customization options for Gemini CLI.
+Settings and customization options for Gravity-CLI.
 
 - **[Custom commands](./cli/custom-commands.md):** Personalized shortcuts.
 - **[Enterprise configuration](./cli/enterprise.md):** Professional environment
@@ -102,7 +102,7 @@ Deep technical documentation and API specifications.
   environment variables.
 - **[Keyboard shortcuts](./reference/keyboard-shortcuts.md):** Productivity
   tips.
-- **[Memory import processor](./reference/memport.md):** How Gemini CLI
+- **[Memory import processor](./reference/memport.md):** How Gravity-CLI
   processes memory from various sources.
 - **[Policy engine](./reference/policy-engine.md):** Fine-grained execution
   control.
@@ -120,11 +120,12 @@ Support, release history, and legal information.
   terms.
 - **[Troubleshooting](./resources/troubleshooting.md):** Common issues and
   solutions.
-- **[Uninstall](./resources/uninstall.md):** How to uninstall Gemini CLI.
+- **[Uninstall](./resources/uninstall.md):** How to uninstall Gravity-CLI.
 
 ## Development
 
-- **[Contribution guide](/docs/contributing):** How to contribute to Gemini CLI.
+- **[Contribution guide](/docs/contributing):** How to contribute to
+  Gravity-CLI.
 - **[Integration testing](./integration-tests.md):** Running integration tests.
 - **[Issue and PR automation](./issue-and-pr-automation.md):** Automation for
   issues and pull requests.

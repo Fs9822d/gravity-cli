@@ -1,6 +1,6 @@
 # Release extensions
 
-Release Gemini CLI extensions to your users through a Git repository or GitHub
+Release Gravity-CLI extensions to your users through a Git repository or GitHub
 Releases. This guide explains how to share your work, list it in the gallery,
 and manage updates.
 
@@ -12,7 +12,7 @@ binary files.
 
 ## List your extension in the gallery
 
-The [Gemini CLI extension gallery](https://geminicli.com/extensions/browse/)
+The [Gravity-CLI extension gallery](https://geminicli.com/extensions/browse/)
 automatically indexes public extensions to help users discover your work. You
 don't need to submit an issue or email us to list your extension.
 
@@ -65,13 +65,13 @@ extension during its next scheduled cycle.
 
 Releasing through Git is the most flexible option. Create a public Git
 repository and provide the URL to your users. They can then install your
-extension using `gemini extensions install <your-repo-uri>`.
+extension using `gravity extensions install <your-repo-uri>`.
 
 Users can optionally depend on a specific branch, tag, or commit using the
 `--ref` argument. For example:
 
 ```bash
-gemini extensions install <your-repo-uri> --ref=stable
+gravity extensions install <your-repo-uri> --ref=stable
 ```
 
 Whenever you push commits to the referenced branch, the CLI prompts users to
@@ -95,7 +95,7 @@ Distributing extensions through
 [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
 provides a faster installation experience by avoiding a repository clone.
 
-Gemini CLI checks for updates by looking for the **Latest** release on GitHub.
+Gravity-CLI checks for updates by looking for the **Latest** release on GitHub.
 Users can also install specific versions using the `--ref` argument with a
 release tag. Use the `--pre-release` flag to install the latest version even if
 it isn't marked as **Latest**.
@@ -112,7 +112,7 @@ platform-independent, provide a single generic asset.
 
 #### Platform-specific archives
 
-To let Gemini CLI find the correct asset for a user's platform, use the
+To let Gravity-CLI find the correct asset for a user's platform, use the
 following naming convention:
 
 1.  **Platform and architecture-specific:**
@@ -205,13 +205,13 @@ users.
     ```
 3.  **Release the update:** Publish this new version in your old repository.
 
-When users check for updates, Gemini CLI detects the `migratedTo` field,
+When users check for updates, Gravity-CLI detects the `migratedTo` field,
 verifies the new repository, and automatically updates their local installation
 to track the new source. All settings migrate automatically.
 
 ## How updates work
 
-Gemini CLI automatically checks for extension updates based on the installation
+Gravity-CLI automatically checks for extension updates based on the installation
 method. Understanding these mechanisms helps you ensure your users always have
 the latest version.
 

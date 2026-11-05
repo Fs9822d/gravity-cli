@@ -80,7 +80,7 @@ They run in **Evals: Nightly** workflows and do not block PR merges.
 If a nightly eval regresses, investigate via agent:
 
 ```bash
-gemini /fix-behavioral-eval [optional-run-uri]
+gravity /fix-behavioral-eval [optional-run-uri]
 ```
 
 ### 3. Promotion (`ALWAYS_PASSES`)
@@ -88,7 +88,7 @@ gemini /fix-behavioral-eval [optional-run-uri]
 Once a test scores 100% consistency over multiple nightly cycles:
 
 ```bash
-gemini /promote-behavioral-eval
+gravity /promote-behavioral-eval
 ```
 
 _Do not promote manually._ The command verifies trajectory logs before updating

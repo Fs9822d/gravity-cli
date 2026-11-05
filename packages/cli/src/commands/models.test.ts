@@ -64,24 +64,24 @@ describe('models command argument parsing', () => {
     process.argv = originalArgv;
   });
 
-  it('recognizes "gemini models" as a command without falling through to a prompt query', async () => {
-    process.argv = ['node', 'gemini', 'models'];
+  it('recognizes "gravity models" as a command without falling through to a prompt query', async () => {
+    process.argv = ['node', 'gravity', 'models'];
     const argv = await parseArguments(createTestMergedSettings());
 
     expect(argv.isCommand).toBe(true);
     expect(argv.query).toBeUndefined();
   });
 
-  it('recognizes "gemini models list" as a command', async () => {
-    process.argv = ['node', 'gemini', 'models', 'list'];
+  it('recognizes "gravity models list" as a command', async () => {
+    process.argv = ['node', 'gravity', 'models', 'list'];
     const argv = await parseArguments(createTestMergedSettings());
 
     expect(argv.isCommand).toBe(true);
     expect(argv.query).toBeUndefined();
   });
 
-  it('accepts "gemini --list-models" flag without throwing unknown argument error', async () => {
-    process.argv = ['node', 'gemini', '--list-models'];
+  it('accepts "gravity --list-models" flag without throwing unknown argument error', async () => {
+    process.argv = ['node', 'gravity', '--list-models'];
     const argv = await parseArguments(createTestMergedSettings());
 
     expect(argv.listModels).toBe(true);

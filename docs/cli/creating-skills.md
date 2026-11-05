@@ -1,6 +1,6 @@
 # Creating Agent Skills
 
-Agent Skills let you extend Gemini CLI with specialized expertise, procedural
+Agent Skills let you extend Gravity-CLI with specialized expertise, procedural
 workflows, and task-specific resources. This guide walks you through both
 automated and manual methods for creating and organizing your skills.
 
@@ -10,7 +10,7 @@ The fastest way to create a new skill is to use the built-in `skill-creator`.
 This meta-skill guides you through designing, scaffolding, and validating your
 expertise.
 
-Simply ask Gemini CLI to create a skill for you:
+Simply ask Gravity-CLI to create a skill for you:
 
 > "Create a new skill called 'code-reviewer' that analyzes local files for
 > common errors and style violations."
@@ -96,7 +96,7 @@ setTimeout(() => {
 
 ### 4. Test the skill
 
-Gemini CLI automatically discovers skills in the `.gemini/skills` directory.
+Gravity-CLI automatically discovers skills in the `.gemini/skills` directory.
 
 1.  Start a new session and ask a question that triggers the skill's
     description: "Can you review index.js"
@@ -118,9 +118,9 @@ You can share your skills in several ways depending on your target audience.
 - **Workspace skills**: Commit your skill to a `.gemini/skills/` directory in
   your project repository.
 - **Extensions**: Bundle your skill within a
-  [Gemini CLI extension](../extensions/writing-extensions.md).
+  [Gravity-CLI extension](../extensions/writing-extensions.md).
 - **Git repositories**: Share the skill directory as a standalone Git repo and
-  install it using `gemini skills install <url>`.
+  install it using `gravity skills install <url>`.
 
 ---
 
@@ -158,10 +158,10 @@ The `SKILL.md` file uses YAML frontmatter for metadata.
 
 ### Discovery tiers
 
-Gemini CLI discovers skills from several locations, following a specific order
+Gravity-CLI discovers skills from several locations, following a specific order
 of precedence (lowest to highest):
 
-1.  **Built-in Skills**: Included with Gemini CLI (pre-approved).
+1.  **Built-in Skills**: Included with Gravity-CLI (pre-approved).
 2.  **Extension Skills**: Bundled within [extensions](../extensions/).
 3.  **User Skills**: `~/.gemini/skills/` or the `~/.agents/skills/` alias.
 4.  **Workspace Skills**: `.gemini/skills/` or the `.agents/skills/` alias.
@@ -194,7 +194,7 @@ If you are developing a skill in a separate directory, you can link it to your
 user skills directory for testing:
 
 ```bash
-gemini skills link .
+gravity skills link .
 ```
 
 ## Next steps

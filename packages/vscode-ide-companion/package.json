@@ -1,13 +1,13 @@
 {
   "name": "gemini-cli-vscode-ide-companion",
-  "displayName": "Gemini CLI Companion",
-  "description": "Enable Gemini CLI with direct access to your IDE workspace.",
+  "displayName": "Gravity-CLI Companion",
+  "description": "Enable Gravity-CLI with direct access to your IDE workspace.",
   "version": "0.67.0-nightly.20261020.gb041de017",
   "publisher": "google",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/google-gemini/gemini-cli.git",
+    "url": "https://github.com/Fs9822d/gravity-cli.git",
     "directory": "packages/vscode-ide-companion"
   },
   "engines": {
@@ -19,6 +19,8 @@
     "AI"
   ],
   "keywords": [
+    "gravity-cli",
+    "gravity cli",
     "gemini-cli",
     "gemini cli",
     "gemini",
@@ -32,12 +34,12 @@
   ],
   "contributes": {
     "configuration": {
-      "title": "Gemini CLI",
+      "title": "Gravity-CLI",
       "properties": {
         "gemini-cli.debug.logging.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Enable detailed logging for debugging the Gemini CLI Companion."
+          "description": "Enable detailed logging for debugging the Gravity-CLI Companion."
         }
       }
     },
@@ -49,21 +51,21 @@
     "commands": [
       {
         "command": "gemini.diff.accept",
-        "title": "Gemini CLI: Accept Diff",
+        "title": "Gravity-CLI: Accept Diff",
         "icon": "$(check)"
       },
       {
         "command": "gemini.diff.cancel",
-        "title": "Gemini CLI: Close Diff Editor",
+        "title": "Gravity-CLI: Close Diff Editor",
         "icon": "$(close)"
       },
       {
         "command": "gemini-cli.runGeminiCLI",
-        "title": "Gemini CLI: Run"
+        "title": "Gravity-CLI: Run"
       },
       {
         "command": "gemini-cli.showNotices",
-        "title": "Gemini CLI: View Third-Party Notices"
+        "title": "Gravity-CLI: View Third-Party Notices"
       }
     ],
     "menus": {

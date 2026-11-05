@@ -1,14 +1,14 @@
 # ACP Mode
 
-ACP (Agent Client Protocol) mode is a special operational mode of Gemini CLI
+ACP (Agent Client Protocol) mode is a special operational mode of Gravity-CLI
 designed for programmatic control, primarily for IDE and other developer tool
 integrations. It uses a JSON-RPC protocol over stdio to communicate between
-Gemini CLI agent and a client.
+Gravity-CLI agent and a client.
 
-To start Gemini CLI in ACP mode, use the `--acp` flag:
+To start Gravity-CLI in ACP mode, use the `--acp` flag:
 
 ```bash
-gemini --acp
+gravity --acp
 ```
 
 ## Agent Client Protocol (ACP)
@@ -27,8 +27,8 @@ documentation.
 ### Existing integrations using ACP
 
 The ACP Agent Registry simplifies the distribution and management of
-ACP-compatible agents across various IDEs. Gemini CLI is an ACP-compatible agent
-and can be found in this registry.
+ACP-compatible agents across various IDEs. Gravity-CLI is an ACP-compatible
+agent and can be found in this registry.
 
 For more general information about the registry, and how to use it with specific
 IDEs like JetBrains and Zed, refer to the
@@ -40,13 +40,13 @@ You can also find more information on the official
 ## Architecture and protocol basics
 
 ACP mode establishes a client-server relationship between your tool (the client)
-and Gemini CLI (the server).
+and Gravity-CLI (the server).
 
 - **Communication:** The entire communication happens over standard input/output
   (stdio) using the JSON-RPC 2.0 protocol.
 - **Client's role:** The client is responsible for sending requests (for
-  example, prompts) and handling responses and notifications from Gemini CLI.
-- **Gemini CLI's role:** In ACP mode, Gemini CLI listens for incoming JSON-RPC
+  example, prompts) and handling responses and notifications from Gravity-CLI.
+- **Gravity-CLI's role:** In ACP mode, Gravity-CLI listens for incoming JSON-RPC
   requests, processes them, and sends back responses.
 
 The core of the ACP implementation can be found in
@@ -61,16 +61,16 @@ use.
 1.  The client implements an **MCP server** that advertises its tools.
 2.  During the ACP `initialize` handshake, the client provides the connection
     details for its MCP server.
-3.  Gemini CLI connects to the MCP server, discovers the available tools, and
+3.  Gravity-CLI connects to the MCP server, discovers the available tools, and
     makes them available to the AI model.
-4.  When the model decides to use one of these tools, Gemini CLI sends a tool
+4.  When the model decides to use one of these tools, Gravity-CLI sends a tool
     call request to the MCP server.
 
 This mechanism lets for a powerful, two-way integration where the agent can
 leverage the IDE's capabilities to perform tasks. The MCP client logic is in
 `packages/core/src/tools/mcp-client.ts`.
 
-When Gemini CLI asks the client for permission to run an MCP tool via
+When Gravity-CLI asks the client for permission to run an MCP tool via
 `session/request_permission`, the request's `toolCall._meta['gemini-cli'].mcp`
 contains `server_name` (the configured name under which the MCP server was
 registered) and `tool_name` (the tool's own name as declared by that server).
@@ -81,7 +81,7 @@ trust grant.
 ## Capabilities and supported methods
 
 The ACP protocol exposes a number of methods for ACP clients (for example IDEs)
-to control Gemini CLI.
+to control Gravity-CLI.
 
 ### Core methods
 
@@ -113,10 +113,10 @@ debugging logs and telemetry.
 
 ### Debugging logs
 
-To enable general debugging logs, start Gemini CLI with the `--debug` flag:
+To enable general debugging logs, start Gravity-CLI with the `--debug` flag:
 
 ```bash
-gemini --acp --debug
+gravity --acp --debug
 ```
 
 ### Telemetry

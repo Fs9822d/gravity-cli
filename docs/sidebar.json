@@ -14,13 +14,13 @@
           },
           { "label": "CLI cheatsheet", "slug": "docs/cli/cli-reference" },
           {
-            "label": "Gemini 3 on Gemini CLI",
+            "label": "Gemini 3 on Gravity-CLI",
             "slug": "docs/get-started/gemini-3"
           }
         ]
       },
       {
-        "label": "Use Gemini CLI",
+        "label": "Use Gravity-CLI",
         "items": [
           {
             "label": "File management",

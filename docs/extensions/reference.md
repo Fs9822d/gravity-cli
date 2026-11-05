@@ -1,29 +1,29 @@
 # Extension reference
 
-This guide covers the `gemini extensions` commands and the structure of the
+This guide covers the `gravity extensions` commands and the structure of the
 `gemini-extension.json` configuration file.
 
 ## Manage extensions
 
-Use the `gemini extensions` command group to manage your extensions from the
+Use the `gravity extensions` command group to manage your extensions from the
 terminal.
 
-Note that commands like `gemini extensions install` are not supported within the
-CLI's interactive mode. However, you can use the `/extensions list` command to
-view installed extensions. All management operations, including updates to slash
-commands, take effect only after you restart the CLI session.
+Note that commands like `gravity extensions install` are not supported within
+the CLI's interactive mode. However, you can use the `/extensions list` command
+to view installed extensions. All management operations, including updates to
+slash commands, take effect only after you restart the CLI session.
 
 ### Install an extension
 
 Install an extension by providing its GitHub repository URL or a local file
 path.
 
-Gemini CLI creates a copy of the extension during installation. You must run
-`gemini extensions update` to pull changes from the source. To install from
+Gravity-CLI creates a copy of the extension during installation. You must run
+`gravity extensions update` to pull changes from the source. To install from
 GitHub, you must have `git` installed on your machine.
 
 ```bash
-gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent] [--skip-settings]
+gravity extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent] [--skip-settings]
 ```
 
 - `<source>`: The GitHub URL or local path of the extension.
@@ -38,7 +38,7 @@ gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release]
 To uninstall one or more extensions, use the `uninstall` command:
 
 ```bash
-gemini extensions uninstall <name...>
+gravity extensions uninstall <name...>
 ```
 
 ### Disable an extension
@@ -47,7 +47,7 @@ Extensions are enabled globally by default. You can disable an extension
 entirely or for a specific workspace.
 
 ```bash
-gemini extensions disable <name> [--scope <scope>]
+gravity extensions disable <name> [--scope <scope>]
 ```
 
 - `<name>`: The name of the extension to disable.
@@ -58,7 +58,7 @@ gemini extensions disable <name> [--scope <scope>]
 Re-enable a disabled extension using the `enable` command:
 
 ```bash
-gemini extensions enable <name> [--scope <scope>]
+gravity extensions enable <name> [--scope <scope>]
 ```
 
 - `<name>`: The name of the extension to enable.
@@ -70,13 +70,13 @@ Update an extension to the version specified in its `gemini-extension.json`
 file.
 
 ```bash
-gemini extensions update <name>
+gravity extensions update <name>
 ```
 
 To update all installed extensions at once:
 
 ```bash
-gemini extensions update --all
+gravity extensions update --all
 ```
 
 ### Create an extension from a template
@@ -84,7 +84,7 @@ gemini extensions update --all
 Create a new extension directory using a built-in template.
 
 ```bash
-gemini extensions new <path> [template]
+gravity extensions new <path> [template]
 ```
 
 - `<path>`: The directory to create.
@@ -93,17 +93,17 @@ gemini extensions new <path> [template]
 
 ### Link a local extension
 
-Create a symbolic link between your development directory and Gemini CLI
+Create a symbolic link between your development directory and Gravity-CLI
 extensions directory. This lets you test changes immediately without
 reinstalling.
 
 ```bash
-gemini extensions link <path>
+gravity extensions link <path>
 ```
 
 ## Extension format
 
-Gemini CLI loads extensions from `<home>/.gemini/extensions`. Each extension
+Gravity-CLI loads extensions from `<home>/.gemini/extensions`. Each extension
 must have a `gemini-extension.json` file in its root directory.
 
 ### `gemini-extension.json`
@@ -171,7 +171,7 @@ The manifest file defines the extension's behavior and configuration.
     settings. If not specified by either the extension or the user, the default
     is `~/.gemini/tmp/<project>/<session-id>/plans/`.
 
-When Gemini CLI starts, it loads all the extensions and merges their
+When Gravity-CLI starts, it loads all the extensions and merges their
 configurations. If there are any conflicts, the workspace configuration takes
 precedence.
 
@@ -207,7 +207,7 @@ To define settings, add a `settings` array to your manifest:
 To update an extension's settings:
 
 ```bash
-gemini extensions config <name> [setting] [--scope <scope>]
+gravity extensions config <name> [setting] [--scope <scope>]
 ```
 
 #### Environment variable sanitization
@@ -229,7 +229,7 @@ so the CLI can allowlist them for use within the extension.
 ### Custom commands
 
 Provide [custom commands](../cli/custom-commands.md) by placing TOML files in a
-`commands/` subdirectory. Gemini CLI uses the directory structure to determine
+`commands/` subdirectory. Gravity-CLI uses the directory structure to determine
 the command name.
 
 For an extension named `gcp`:
@@ -260,12 +260,12 @@ agent definition files (`.md`) to an `agents/` directory in your extension root.
 
 ### <a id="policy-engine"></a>Policy Engine
 
-Extensions can contribute policy rules and safety checkers to Gemini CLI
+Extensions can contribute policy rules and safety checkers to Gravity-CLI
 [Policy Engine](../reference/policy-engine.md). These rules are defined in
 `.toml` files and take effect when the extension is activated.
 
 To add policies, create a `policies/` directory in your extension's root and
-place your `.toml` policy files inside it. Gemini CLI automatically loads all
+place your `.toml` policy files inside it. Gravity-CLI automatically loads all
 `.toml` files from this directory.
 
 Rules contributed by extensions run in their own tier (tier 2), alongside
@@ -274,7 +274,7 @@ but lower priority than user or admin policies.
 
 <!-- prettier-ignore -->
 > [!WARNING]
-> For security, Gemini CLI ignores any `allow` decisions or `yolo`
+> For security, Gravity-CLI ignores any `allow` decisions or `yolo`
 > mode configurations in extension policies. This ensures that an extension
 > cannot automatically approve tool calls or bypass security measures without
 > your confirmation.
@@ -351,7 +351,7 @@ the extension name (for example, `/gcp.deploy`) using a dot separator.
 
 ## Variables
 
-Gemini CLI supports variable substitution in `gemini-extension.json` and
+Gravity-CLI supports variable substitution in `gemini-extension.json` and
 `hooks/hooks.json`.
 
 | Variable           | Description                                     |

@@ -1,14 +1,14 @@
-# Gemini CLI Project Context
+# Gravity-CLI Project Context
 
-Gemini CLI is an open-source AI agent that brings the power of Gemini directly
-into the terminal. It is designed to be a terminal-first, extensible, and
-powerful tool for developers.
+Gravity-CLI is an open-source AI agent that brings the power of Gemini and
+Antigravity directly into the terminal. It is designed to be a terminal-first,
+extensible, and powerful tool for developers.
 
 ## Project Overview
 
 - **Purpose:** Provide a seamless terminal interface for Gemini models,
   supporting code understanding, generation, automation, and integration via MCP
-  (Model Context Protocol).
+  (Model Context Protocol) and Antigravity backend.
 - **Main Technologies:**
   - **Runtime:** Node.js (>=20.0.0, recommended ~20.19.0 for development)
   - **Language:** TypeScript
@@ -23,7 +23,7 @@ powerful tool for developers.
   - `packages/core`: Backend logic, Gemini API orchestration, prompt
     construction, and tool execution.
   - `packages/a2a-server`: Experimental Agent-to-Agent server.
-  - `packages/sdk`: Programmatic SDK for embedding Gemini CLI capabilities.
+  - `packages/sdk`: Programmatic SDK for embedding Gravity-CLI capabilities.
   - `packages/devtools`: Integrated developer tools (Network/Console inspector).
   - `packages/test-utils`: Shared test utilities and test rig.
   - `packages/vscode-ide-companion`: VS Code extension pairing with the CLI.

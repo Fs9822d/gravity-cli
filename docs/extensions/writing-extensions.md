@@ -1,18 +1,18 @@
-# Build Gemini CLI extensions
+# Build Gravity-CLI extensions
 
-Gemini CLI extensions let you expand the capabilities of Gemini CLI by adding
+Gravity-CLI extensions let you expand the capabilities of Gravity-CLI by adding
 custom tools, commands, and context. This guide walks you through creating your
 first extension, from setting up a template to adding custom functionality and
 linking it for local development.
 
 ## Prerequisites
 
-Before you start, ensure you have Gemini CLI installed and a basic understanding
-of Node.js.
+Before you start, ensure you have Gravity-CLI installed and a basic
+understanding of Node.js.
 
 ## Extension features
 
-Extensions offer several ways to customize Gemini CLI. Use this table to decide
+Extensions offer several ways to customize Gravity-CLI. Use this table to decide
 which features your extension needs.
 
 | Feature                                                        | What it is                                                                                                                | When to use it                                                                                                                                                                                                                                                                                 | Invoked by            |
@@ -33,7 +33,7 @@ Run the following command to create a new directory called `my-first-extension`
 with the template files:
 
 ```bash
-gemini extensions new my-first-extension mcp-server
+gravity extensions new my-first-extension mcp-server
 ```
 
 This creates a directory with the following structure:
@@ -51,7 +51,7 @@ Your new extension contains several key files that define its behavior.
 
 ### `gemini-extension.json`
 
-The manifest file tells Gemini CLI how to load and use your extension.
+The manifest file tells Gravity-CLI how to load and use your extension.
 
 ```json
 {
@@ -154,7 +154,7 @@ add a setting for an API key.
     }
     ```
 
-When a user installs this extension, Gemini CLI will prompt them to enter the
+When a user installs this extension, Gravity-CLI will prompt them to enter the
 "API Key". The value will be stored securely in the system keychain (because
 `sensitive` is true) and injected into the MCP server's process as the
 `MY_SERVICE_API_KEY` environment variable.
@@ -168,7 +168,7 @@ When a user installs this extension, Gemini CLI will prompt them to enter the
 
 ## Step 4: Link your extension
 
-Link your extension to your Gemini CLI installation for local development.
+Link your extension to your Gravity-CLI installation for local development.
 
 1.  **Install dependencies:**
 
@@ -179,15 +179,15 @@ Link your extension to your Gemini CLI installation for local development.
 
 2.  **Link the extension:**
 
-    The `link` command creates a symbolic link from Gemini CLI extensions
+    The `link` command creates a symbolic link from Gravity-CLI extensions
     directory to your development directory. Changes you make are reflected
     immediately.
 
     ```bash
-    gemini extensions link .
+    gravity extensions link .
     ```
 
-Restart your Gemini CLI session to use the new `fetch_posts` tool. Test it by
+Restart your Gravity-CLI session to use the new `fetch_posts` tool. Test it by
 asking: "fetch posts".
 
 ## Step 5: Add a custom command
@@ -222,8 +222,8 @@ Custom commands create shortcuts for complex prompts.
     This command, `/fs:grep-code`, takes an argument, runs the `grep` shell
     command, and pipes the results into a prompt for summarization.
 
-After saving the file, restart Gemini CLI. Run `/fs:grep-code "some pattern"` to
-use your new command.
+After saving the file, restart Gravity-CLI. Run `/fs:grep-code "some pattern"`
+to use your new command.
 
 ## Step 6: Add a custom `GEMINI.md`
 
@@ -257,7 +257,7 @@ information.
     }
     ```
 
-Restart Gemini CLI. The model now has the context from your `GEMINI.md` file in
+Restart Gravity-CLI. The model now has the context from your `GEMINI.md` file in
 every session where the extension is active.
 
 ## (Optional) Step 7: Add an Agent Skill
@@ -298,8 +298,8 @@ Skills are activated only when needed, which saves context tokens.
     3. Suggest remediation steps for any findings.
     ```
 
-Gemini CLI automatically discovers skills bundled with your extension. The model
-activates them when it identifies a relevant task.
+Gravity-CLI automatically discovers skills bundled with your extension. The
+model activates them when it identifies a relevant task.
 
 ## Step 8: Release your extension
 

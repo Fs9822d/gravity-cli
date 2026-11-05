@@ -2,16 +2,18 @@
 
 exports[`MainContent tool group border SVG snapshots > should render SVG snapshot for a pending search dialog (google_web_search) 1`] = `
 "
- ▝▜▄      ▗█▀▀▜▙▝█▛▀▀▌▜██▖▟██▘▜█▘▜██▖▝█▛▝█▛
-   ▝▜▄    █▌     █▙▟  ▐█▝█▛▐█ ▐█ ▐█▝█▖█▌ █▌
-  ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
- ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
+  ▗▄▄▖    ____                 _ __         
+ ▐▛▀▀▜▌    / __/________ __   __(_) /___  __  
+ ▐▙▄▄▟▌   / /_ / ___/ _ \`/ | / / / __/ / / /  
+  ▝▀▀▘    / __// /  / // /| |/ / / /_/ /_/ /   
+          /_/  /_/   \\_,_/ |___/_/\\__/\\__, /    
+                                   /____/
 
- Gemini CLI v1.2.3
+ Gravity-CLI v1.2.3
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create GRAVITY.md or GEMINI.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -25,16 +27,18 @@ Tips for getting started:
 
 exports[`MainContent tool group border SVG snapshots > should render SVG snapshot for a shell tool 1`] = `
 "
- ▝▜▄      ▗█▀▀▜▙▝█▛▀▀▌▜██▖▟██▘▜█▘▜██▖▝█▛▝█▛
-   ▝▜▄    █▌     █▙▟  ▐█▝█▛▐█ ▐█ ▐█▝█▖█▌ █▌
-  ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
- ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
+  ▗▄▄▖    ____                 _ __         
+ ▐▛▀▀▜▌    / __/________ __   __(_) /___  __  
+ ▐▙▄▄▟▌   / /_ / ___/ _ \`/ | / / / __/ / / /  
+  ▝▀▀▘    / __// /  / // /| |/ / / /_/ /_/ /   
+          /_/  /_/   \\_,_/ |___/_/\\__/\\__, /    
+                                   /____/
 
- Gemini CLI v1.2.3
+ Gravity-CLI v1.2.3
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create GRAVITY.md or GEMINI.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -48,16 +52,18 @@ Tips for getting started:
 
 exports[`MainContent tool group border SVG snapshots > should render SVG snapshot for an empty slice following a search tool 1`] = `
 "
- ▝▜▄      ▗█▀▀▜▙▝█▛▀▀▌▜██▖▟██▘▜█▘▜██▖▝█▛▝█▛
-   ▝▜▄    █▌     █▙▟  ▐█▝█▛▐█ ▐█ ▐█▝█▖█▌ █▌
-  ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
- ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
+  ▗▄▄▖    ____                 _ __         
+ ▐▛▀▀▜▌    / __/________ __   __(_) /___  __  
+ ▐▙▄▄▟▌   / /_ / ___/ _ \`/ | / / / __/ / / /  
+  ▝▀▀▘    / __// /  / // /| |/ / / /_/ /_/ /   
+          /_/  /_/   \\_,_/ |___/_/\\__/\\__, /    
+                                   /____/
 
- Gemini CLI v1.2.3
+ Gravity-CLI v1.2.3
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create GRAVITY.md or GEMINI.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results

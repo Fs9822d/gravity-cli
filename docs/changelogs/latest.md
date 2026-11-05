@@ -66,8 +66,8 @@ npm install -g @google/gemini-cli
 - fix(core): harden SKILL.md frontmatter parsing for single-line descriptions by
   @jesussamuel-byte in
   [#29769](https://github.com/google-gemini/gemini-cli/pull/29769)
-- Add Banner about Gemini CLI not being optimized for Gemini 4 by @srithreepo in
-  [#29774](https://github.com/google-gemini/gemini-cli/pull/29774)
+- Add Banner about Gravity-CLI not being optimized for Gemini 4 by @srithreepo
+  in [#29774](https://github.com/google-gemini/gemini-cli/pull/29774)
 - Update README to remove obsolete content by @srithreepo in
   [#29775](https://github.com/google-gemini/gemini-cli/pull/29775)
 - fix(ci): remove unsupported members permission in unassign-inactive-assignees

@@ -4,13 +4,13 @@ We would love to accept your patches and contributions to this project. This
 document includes:
 
 - **[Before you begin](#before-you-begin):** Essential steps to take before
-  becoming a Gemini CLI contributor.
+  becoming a Gravity-CLI contributor.
 - **[Code contribution process](#code-contribution-process):** How to contribute
-  code to Gemini CLI.
+  code to Gravity-CLI.
 - **[Development setup and workflow](#development-setup-and-workflow):** How to
   set up your development environment and workflow.
 - **[Documentation contribution process](#documentation-contribution-process):**
-  How to contribute documentation to Gemini CLI.
+  How to contribute documentation to Gravity-CLI.
 
 We're looking forward to seeing your contributions!
 
@@ -90,7 +90,7 @@ You can run the review tool in two ways:
     it with the latest Flash model instead:
     `./scripts/review.sh <PR_NUMBER> gemini-3-flash-preview`.
 
-2.  **Manually from within Gemini CLI:** If you already have the PR checked out
+2.  **Manually from within Gravity-CLI:** If you already have the PR checked out
     and built, you can run the tool directly from the CLI prompt:
 
     ```text
@@ -111,7 +111,7 @@ assign or unassign the issue as requested, provided the conditions are met
 
 Please note that you can have a maximum of 3 issues assigned to you at any given
 time and that only
-[issues labeled "help wanted"](https://github.com/google-gemini/gemini-cli/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22)
+[issues labeled "help wanted"](https://github.com/Fs9822d/gravity-cli/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22)
 may be self-assigned.
 
 ### Pull request guidelines
@@ -216,8 +216,8 @@ development setup of this project.
 To clone the repository:
 
 ```bash
-git clone https://github.com/google-gemini/gemini-cli.git # Or your fork's URL
-cd gemini-cli
+git clone https://github.com/Fs9822d/gravity-cli.git # Or your fork's URL
+cd gravity-cli
 ```
 
 To install dependencies defined in `package.json` as well as root dependencies:
@@ -243,7 +243,7 @@ setting `GEMINI_SANDBOX=true` in your `~/.env` and ensuring a sandboxing
 provider (e.g. `macOS Seatbelt`, `docker`, or `podman`) is available. See
 [Sandboxing](#sandboxing) for details.
 
-To build both the `gemini` CLI utility and the sandbox container, run
+To build both the `gravity` CLI utility and the sandbox container, run
 `build:all` from the root directory:
 
 ```bash
@@ -254,17 +254,17 @@ To skip building the sandbox container, you can use `npm run build` instead.
 
 ### Running the CLI
 
-To start the Gemini CLI from the source code (after building), run the following
-command from the root directory:
+To start the Gravity-CLI from the source code (after building), run the
+following command from the root directory:
 
 ```bash
 npm start
 ```
 
-If you'd like to run the source build outside of the gemini-cli folder, you can
-utilize `npm link path/to/gemini-cli/packages/cli` (see:
+If you'd like to run the source build outside of the gravity-cli folder, you can
+utilize `npm link path/to/gravity-cli/packages/cli` (see:
 [docs](https://docs.npmjs.com/cli/v9/commands/npm-link)) or
-`alias gemini="node path/to/gemini-cli/packages/cli"` to run with `gemini`
+`alias gravity="node path/to/gravity-cli/packages/cli"` to run with `gravity`
 
 ### Running tests
 
@@ -285,7 +285,7 @@ comprehensive check, it is recommended to run `npm run preflight`.
 #### Integration tests
 
 The integration tests are designed to validate the end-to-end functionality of
-the Gemini CLI. They are not run as part of the default `npm run test` command.
+the Gravity-CLI. They are not run as part of the default `npm run test` command.
 
 To run the integration tests, use the following command:
 
@@ -349,7 +349,7 @@ npm run lint
 - Please adhere to the coding style, patterns, and conventions used throughout
   the existing codebase.
 - Consult
-  [GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md)
+  [GEMINI.md](https://github.com/Fs9822d/gravity-cli/blob/main/GEMINI.md)
   (typically found in the project root) for specific instructions related to
   AI-assisted development, including conventions for React, comments, and Git
   usage.
@@ -379,18 +379,18 @@ recommended.
 To hit a breakpoint inside the sandbox container run:
 
 ```bash
-DEBUG=1 gemini
+DEBUG=1 gravity
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-gemini-cli due to automatic exclusion. Use `.gemini/.env` files for gemini-cli
+gravity-cli due to automatic exclusion. Use `.gemini/.env` files for gravity-cli
 specific debug settings.
 
 ### React DevTools
 
 To debug the CLI's React-based UI, you can use React DevTools.
 
-1.  **Start the Gemini CLI in development mode:**
+1.  **Start the Gravity-CLI in development mode:**
 
     ```bash
     DEV=true npm start
@@ -419,7 +419,7 @@ To debug the CLI's React-based UI, you can use React DevTools.
 
 #### macOS Seatbelt
 
-On macOS, `gemini` uses Seatbelt (`sandbox-exec`) under a `permissive-open`
+On macOS, `gravity` uses Seatbelt (`sandbox-exec`) under a `permissive-open`
 profile (see `packages/cli/src/utils/sandbox-macos-permissive-open.sb`) that
 denies operations by default, confining writes to the project folder while
 allowing broad file reads and outbound network traffic ("open") by default. You
@@ -448,13 +448,13 @@ sandbox.
 
 Container-based sandboxing mounts the project directory (and system temp
 directory) with read-write access and is started/stopped/removed automatically
-as you start/stop Gemini CLI. Files created within the sandbox should be
+as you start/stop Gravity-CLI. Files created within the sandbox should be
 automatically mapped to your user/group on host machine. You can easily specify
 additional mounts, ports, or environment variables by setting
 `SANDBOX_{MOUNTS,PORTS,ENV}` as needed. You can also fully customize the sandbox
 for your projects by creating the files `.gemini/sandbox.Dockerfile` and/or
 `.gemini/sandbox.bashrc` under your project settings directory (`.gemini`) and
-running `gemini` with `BUILD_SANDBOX=1` to trigger building of your custom
+running `gravity` with `BUILD_SANDBOX=1` to trigger building of your custom
 sandbox.
 
 #### Proxied networking
@@ -490,7 +490,7 @@ our documentation to be clear, concise, and helpful to our users. We value:
 - **Accuracy:** Ensure all information is correct and up-to-date.
 - **Completeness:** Cover all aspects of a feature or topic.
 - **Examples:** Provide practical examples to help users understand how to use
-  Gemini CLI.
+  Gravity-CLI.
 
 ### Getting started
 
@@ -510,7 +510,7 @@ code.
 ### Documentation structure
 
 Our documentation is organized using
-[sidebar.json](https://github.com/google-gemini/gemini-cli/blob/main/docs/sidebar.json)
+[sidebar.json](https://github.com/Fs9822d/gravity-cli/blob/main/docs/sidebar.json)
 as the table of contents. When adding new documentation:
 
 1. Create your markdown file **in the appropriate directory** under `/docs`.
@@ -564,8 +564,8 @@ If you have questions about contributing documentation:
 
 - Check our [FAQ](https://geminicli.com/docs/resources/faq).
 - Review existing documentation for examples.
-- Open [an issue](https://github.com/google-gemini/gemini-cli/issues) to discuss
-  your proposed changes.
+- Open [an issue](https://github.com/Fs9822d/gravity-cli/issues) to discuss your
+  proposed changes.
 - Reach out to the maintainers.
 
-We appreciate your contributions to making Gemini CLI documentation better!
+We appreciate your contributions to making Gravity-CLI documentation better!

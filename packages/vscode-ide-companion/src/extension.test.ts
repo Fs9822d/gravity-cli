@@ -75,7 +75,7 @@ describe('activate', () => {
     } as vscode.Extension<unknown>);
     await activate(context);
     expect(showInformationMessageMock).toHaveBeenCalledWith(
-      'Gemini CLI Companion extension successfully installed.',
+      'Gravity-CLI Companion extension successfully installed.',
     );
   });
 
@@ -157,17 +157,17 @@ describe('activate', () => {
     expect(workspaceFoldersDisposable.dispose).toHaveBeenCalledTimes(1);
   });
 
-  it('should launch the Gemini CLI when the user clicks the button', async () => {
+  it('should launch Gravity-CLI when the user clicks the button', async () => {
     const showInformationMessageMock = vi
       .mocked(vscode.window.showInformationMessage)
-      .mockResolvedValue('Re-launch Gemini CLI' as never);
+      .mockResolvedValue('Re-launch Gravity-CLI' as never);
     vi.mocked(context.globalState.get).mockReturnValue(undefined);
     vi.mocked(vscode.extensions.getExtension).mockReturnValue({
       packageJSON: { version: '1.1.0' },
     } as vscode.Extension<unknown>);
     await activate(context);
     expect(showInformationMessageMock).toHaveBeenCalledWith(
-      'Gemini CLI Companion extension successfully installed.',
+      'Gravity-CLI Companion extension successfully installed.',
     );
   });
 
@@ -200,7 +200,7 @@ describe('activate', () => {
       await activate(context);
 
       expect(showInformationMessageMock).toHaveBeenCalledWith(
-        'A new version (1.2.0) of the Gemini CLI Companion extension is available.',
+        'A new version (1.2.0) of the Gravity-CLI Companion extension is available.',
         'Update to latest version',
       );
     });

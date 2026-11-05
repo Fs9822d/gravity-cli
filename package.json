@@ -1,6 +1,6 @@
 {
-  "name": "gravity-harness",
-  "description": "Gravity Harness - Modern AI Terminal Agent Interface powered by Antigravity",
+  "name": "gravity-cli",
+  "description": "Gravity-CLI - Modern AI Terminal Agent Interface powered by Antigravity",
   "version": "0.67.0-nightly.20261020.gb041de017",
   "engines": {
     "node": ">=20.0.0"
@@ -12,7 +12,7 @@
   "private": "true",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/Fs9822d/gravity-cli.git"
   },
   "config": {
     "sandboxImageUri": "us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.67.0-nightly.20261020.gb041de017"

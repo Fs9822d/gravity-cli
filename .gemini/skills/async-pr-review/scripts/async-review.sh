@@ -75,14 +75,14 @@ echo "  ↳ [2/5] Starting build and lint..."
 rm -f "${log_dir}/build-and-lint.exit"
 { { npm run clean && npm ci && npm run format && npm run build && npm run lint:ci && npm run typecheck; } > "${log_dir}/build-and-lint.log" 2>&1; echo $? > "${log_dir}/build-and-lint.exit"; } &
 
-# Dynamically resolve gemini binary (fallback to your nightly path)
-GEMINI_CMD="$(command -v gemini || echo "${HOME}/.gcli/nightly/node_modules/.bin/gemini")"
+# Dynamically resolve gravity binary (fallback to your nightly path)
+GRAVITY_CMD="$(command -v gravity || command -v gemini || echo "${HOME}/.gcli/nightly/node_modules/.bin/gravity")"
 # shellcheck disable=SC2312
 POLICY_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/policy.toml"
 
-echo "  ↳ [3/5] Starting Gemini code review..."
+echo "  ↳ [3/5] Starting Gravity code review..."
 rm -f "${log_dir}/review.exit"
-{ "${GEMINI_CMD}" --policy "${POLICY_PATH}" -p "/review-frontend ${pr_number}" > "${log_dir}/review.md" 2>&1; echo $? > "${log_dir}/review.exit"; } &
+{ "${GRAVITY_CMD}" --policy "${POLICY_PATH}" -p "/review-frontend ${pr_number}" > "${log_dir}/review.md" 2>&1; echo $? > "${log_dir}/review.exit"; } &
 
 echo "  ↳ [4/5] Starting automated tests (waiting for build and lint)..."
 rm -f "${log_dir}/npm-test.exit"
@@ -143,13 +143,13 @@ rm -f "${log_dir}/npm-test.exit"
   fi
 } &
 
-echo "  ↳ [5/5] Starting Gemini test execution (waiting for build and lint)..."
+echo "  ↳ [5/5] Starting Gravity test execution (waiting for build and lint)..."
 rm -f "${log_dir}/test-execution.exit"
 { 
   while [[ ! -f "${log_dir}/build-and-lint.exit" ]]; do sleep 1; done
   read -r build_exit < "${log_dir}/build-and-lint.exit" || build_exit=""
   if [[ "${build_exit}" == "0" ]]; then
-    "${GEMINI_CMD}" --policy "${POLICY_PATH}" -p "Analyze the diff for PR ${pr_number} using 'gh pr diff ${pr_number}'. Instead of running the project's automated test suite (like 'npm test'), physically exercise the newly changed code in the terminal (e.g., by writing a temporary script to call the new functions, or testing the CLI command directly). Verify the feature's behavior works as expected. IMPORTANT: Do NOT modify any source code to fix errors. Just exercise the code and log the results, reporting any failures clearly. Do not ask for user confirmation." > "${log_dir}/test-execution.log" 2>&1; echo $? > "${log_dir}/test-execution.exit"
+    "${GRAVITY_CMD}" --policy "${POLICY_PATH}" -p "Analyze the diff for PR ${pr_number} using 'gh pr diff ${pr_number}'. Instead of running the project's automated test suite (like 'npm test'), physically exercise the newly changed code in the terminal (e.g., by writing a temporary script to call the new functions, or testing the CLI command directly). Verify the feature's behavior works as expected. IMPORTANT: Do NOT modify any source code to fix errors. Just exercise the code and log the results, reporting any failures clearly. Do not ask for user confirmation." > "${log_dir}/test-execution.log" 2>&1; echo $? > "${log_dir}/test-execution.exit"
   else
     echo "Skipped due to build-and-lint failure" > "${log_dir}/test-execution.log"
     echo 1 > "${log_dir}/test-execution.exit"

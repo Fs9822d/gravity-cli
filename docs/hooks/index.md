@@ -1,13 +1,13 @@
-# Gemini CLI hooks
+# Gravity-CLI hooks
 
-Hooks are scripts or programs that Gemini CLI executes at specific points in the
-agentic loop, allowing you to intercept and customize behavior without modifying
-the CLI's source code.
+Hooks are scripts or programs that Gravity-CLI executes at specific points in
+the agentic loop, allowing you to intercept and customize behavior without
+modifying the CLI's source code.
 
 ## What are hooks?
 
 Hooks run synchronously as part of the agent loop—when a hook event fires,
-Gemini CLI waits for all matching hooks to complete before continuing.
+Gravity-CLI waits for all matching hooks to complete before continuing.
 
 With hooks, you can:
 
@@ -33,7 +33,7 @@ With hooks, you can:
 
 ### Hook events
 
-Hooks are triggered by specific events in Gemini CLI's lifecycle.
+Hooks are triggered by specific events in Gravity-CLI's lifecycle.
 
 | Event                 | When It Fires                                  | Impact                 | Common Use Cases                             |
 | --------------------- | ---------------------------------------------- | ---------------------- | -------------------------------------------- |
@@ -64,12 +64,12 @@ Hooks communicate via `stdin` (Input) and `stdout` (Output).
    fail. The CLI will default to "Allow" and treat the entire output as a
    `systemMessage`.
 3. **Debug via Stderr**: Use `stderr` for **all** logging and debugging (for
-   example, `echo "debug" >&2`). Gemini CLI captures `stderr` but never attempts
-   to parse it as JSON.
+   example, `echo "debug" >&2`). Gravity-CLI captures `stderr` but never
+   attempts to parse it as JSON.
 
 #### Exit codes
 
-Gemini CLI uses exit codes to determine the high-level outcome of a hook
+Gravity-CLI uses exit codes to determine the high-level outcome of a hook
 execution:
 
 | Exit Code | Label            | Behavioral Impact                                                                                                                                                            |
@@ -91,7 +91,7 @@ You can filter which specific tools or triggers fire your hook using the
 
 ## Configuration
 
-Hooks are configured in `settings.json`. Gemini CLI merges configurations from
+Hooks are configured in `settings.json`. Gravity-CLI merges configurations from
 multiple layers in the following order of precedence (highest to lowest):
 
 1.  **Project settings**: `.gemini/settings.json` in the current directory.
@@ -152,7 +152,7 @@ Hooks are executed with a sanitized environment.
 > machine.
 
 **Project-level hooks** are particularly risky when opening untrusted projects.
-Gemini CLI **fingerprints** project hooks. If a hook's name or command changes
+Gravity-CLI **fingerprints** project hooks. If a hook's name or command changes
 (for example, via `git pull`), it is treated as a **new, untrusted hook** and
 you will be warned before it executes.
 

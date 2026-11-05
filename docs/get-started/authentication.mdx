@@ -1,8 +1,8 @@
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-# Gemini CLI authentication setup
+# Gravity-CLI authentication setup
 
-To use Gemini CLI, you'll need to authenticate with Google. This guide helps you
+To use Gravity-CLI, you'll need to authenticate with Google. This guide helps you
 quickly find the best way to sign in based on your account type and how you're
 using the CLI.
 
@@ -11,7 +11,7 @@ using the CLI.
 > To compare features and find the right quota for your needs, see our
 > [Plans page](https://geminicli.com/plans/).
 
-For most users, we recommend starting Gemini CLI and logging in with your
+For most users, we recommend starting Gravity-CLI and logging in with your
 personal Google account.
 
 ## Choose your authentication method <a id="auth-methods"></a>
@@ -41,23 +41,23 @@ Select the authentication method that matches your situation in the table below:
 
 ## (Recommended) Sign in with Google <a id="login-google"></a>
 
-If you run Gemini CLI on your local machine, the simplest authentication method
+If you run Gravity-CLI on your local machine, the simplest authentication method
 is logging in with your Google account. This method requires a web browser on a
-machine that can communicate with the terminal running Gemini CLI (for example,
+machine that can communicate with the terminal running Gravity-CLI (for example,
 your local machine).
 
 If you are a **Google AI Pro** or **Google AI Ultra** subscriber, use the Google
 account associated with your subscription.
 
-To authenticate and use Gemini CLI:
+To authenticate and use Gravity-CLI:
 
 1. Start the CLI:
 
    ```bash
-   gemini
+   gravity
    ```
 
-2. Select **Sign in with Google**. Gemini CLI opens a sign in prompt using your
+2. Select **Sign in with Google**. Gravity-CLI opens a sign in prompt using your
    web browser. Follow the on-screen instructions. Your credentials will be
    cached locally for future sessions.
 
@@ -78,7 +78,7 @@ For instructions, see [Set your Google Cloud Project](#set-gcp).
 If you don't want to authenticate using your Google account, you can use an API
 key from Google AI Studio.
 
-To authenticate and use Gemini CLI with a Gemini API key:
+To authenticate and use Gravity-CLI with a Gemini API key:
 
 1. Obtain your API key from
    [Google AI Studio](https://aistudio.google.com/app/apikey).
@@ -110,7 +110,7 @@ To authenticate and use Gemini CLI with a Gemini API key:
 3. Start the CLI:
 
    ```bash
-   gemini
+   gravity
    ```
 
 4. Select **Use Gemini API key**.
@@ -122,7 +122,7 @@ To authenticate and use Gemini CLI with a Gemini API key:
 
 ## Use Vertex AI <a id="vertex-ai"></a>
 
-To use Gemini CLI with Google Cloud's Vertex AI platform, choose from the
+To use Gravity-CLI with Google Cloud's Vertex AI platform, choose from the
 following authentication options:
 
 - A. Application Default Credentials (ADC) using `gcloud`.
@@ -197,7 +197,7 @@ Remove-Item Env:\GOOGLE_API_KEY, Env:\GEMINI_API_KEY -ErrorAction Ignore
 4. Start the CLI:
 
    ```bash
-   gemini
+   gravity
    ```
 
 5. Select **Vertex AI**.
@@ -258,7 +258,7 @@ Remove-Item Env:\GOOGLE_API_KEY, Env:\GEMINI_API_KEY -ErrorAction Ignore
 4.  Start the CLI:
 
     ```bash
-    gemini
+    gravity
     ```
 
 5.  Select **Vertex AI**.
@@ -302,7 +302,7 @@ Remove-Item Env:\GOOGLE_API_KEY, Env:\GEMINI_API_KEY -ErrorAction Ignore
 4.  Start the CLI:
 
     ```bash
-    gemini
+    gravity
     ```
 
 5.  Select **Vertex AI**.
@@ -314,14 +314,14 @@ Remove-Item Env:\GOOGLE_API_KEY, Env:\GEMINI_API_KEY -ErrorAction Ignore
 > Google Cloud project for authentication.
 
 When you sign in using your Google account, you may need to configure a Google
-Cloud project for Gemini CLI to use. This applies when you meet at least one of
+Cloud project for Gravity-CLI to use. This applies when you meet at least one of
 the following conditions:
 
 - You are using a Company, School, or Google Workspace account.
 - You are using a Gemini Code Assist license from the Google Developer Program.
 - You are using a license from a Gemini Code Assist subscription.
 
-To configure Gemini CLI to use a Google Cloud project, do the following:
+To configure Gravity-CLI to use a Google Cloud project, do the following:
 
 1.  [Find your Google Cloud Project ID](https://support.google.com/googleapi/answer/7014113).
 
@@ -331,7 +331,7 @@ To configure Gemini CLI to use a Google Cloud project, do the following:
 
 4.  Configure your environment variables. Set either the `GOOGLE_CLOUD_PROJECT`
     or `GOOGLE_CLOUD_PROJECT_ID` variable to the project ID to use with Gemini
-    CLI. Gemini CLI checks for `GOOGLE_CLOUD_PROJECT` first, then falls back to
+    CLI. Gravity-CLI checks for `GOOGLE_CLOUD_PROJECT` first, then falls back to
     `GOOGLE_CLOUD_PROJECT_ID`.
 
     For example, to set the `GOOGLE_CLOUD_PROJECT_ID` variable:
@@ -395,7 +395,7 @@ persist them with the following methods:
 > shell can read them.
 
 2.  **Use a `.env` file:** Create a `.gemini/.env` file in your project
-    directory or home directory. Gemini CLI automatically loads variables from
+    directory or home directory. Gravity-CLI automatically loads variables from
     the first `.env` file it finds, searching up from the current directory,
     then in your home directory's `.gemini/.env` (for example, `~/.gemini/.env`
     or `%USERPROFILE%\.gemini\.env`).
@@ -431,12 +431,12 @@ Variables are loaded from the first file found, not merged.
 
 ## Running in Google Cloud environments <a id="cloud-env"></a>
 
-When running Gemini CLI within certain Google Cloud environments, authentication
+When running Gravity-CLI within certain Google Cloud environments, authentication
 is automatic.
 
-In a Google Cloud Shell environment, Gemini CLI typically authenticates
+In a Google Cloud Shell environment, Gravity-CLI typically authenticates
 automatically using your Cloud Shell credentials. In Compute Engine
-environments, Gemini CLI automatically uses Application Default Credentials
+environments, Gravity-CLI automatically uses Application Default Credentials
 (ADC) from the environment's metadata server.
 
 If automatic authentication fails, use one of the interactive methods described
@@ -458,5 +458,5 @@ configure authentication using environment variables:
 Your authentication method affects your quotas, pricing, Terms of Service, and
 privacy notices. Review the following pages to learn more:
 
-- [Gemini CLI: Quotas and Pricing](../resources/quota-and-pricing.md).
-- [Gemini CLI: Terms of Service and Privacy Notice](../resources/tos-privacy.md).
+- [Gravity-CLI: Quotas and Pricing](../resources/quota-and-pricing.md).
+- [Gravity-CLI: Terms of Service and Privacy Notice](../resources/tos-privacy.md).

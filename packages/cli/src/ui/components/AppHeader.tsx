@@ -17,11 +17,7 @@ import { theme } from '../semantic-colors.js';
 import { ThemedGradient } from './ThemedGradient.js';
 import { CliSpinner } from './CliSpinner.js';
 
-import {
-  shortAsciiLogo,
-  longAsciiLogo,
-  tinyAsciiLogo,
-} from './AsciiArt.js';
+import { shortAsciiLogo, longAsciiLogo, tinyAsciiLogo } from './AsciiArt.js';
 import { getAsciiArtWidth } from '../utils/textUtils.js';
 
 interface AppHeaderProps {
@@ -32,12 +28,7 @@ interface AppHeaderProps {
 export const AppHeader = ({ version, showDetails = true }: AppHeaderProps) => {
   const settings = useSettings();
   const config = useConfig();
-  const {
-    terminalWidth,
-    bannerData,
-    bannerVisible,
-    updateInfo,
-  } = useUIState();
+  const { terminalWidth, bannerData, bannerVisible, updateInfo } = useUIState();
 
   const { bannerText } = useBanner(bannerData);
   const { showTips } = useTips();
@@ -60,10 +51,10 @@ export const AppHeader = ({ version, showDetails = true }: AppHeaderProps) => {
 
   const renderMetadata = () => (
     <Box flexDirection="column">
-      {/* Line 1: Gravity Harness vVersion [Updating] */}
+      {/* Line 1: Gravity-CLI vVersion [Updating] */}
       <Box>
         <Text bold color={theme.text.primary}>
-          Gravity Harness
+          Gravity-CLI
         </Text>
         <Text color={theme.text.secondary}> v{version}</Text>
         {updateInfo?.isUpdating && (

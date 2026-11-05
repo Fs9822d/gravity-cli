@@ -110,7 +110,7 @@ export const useFolderTrust = (
       } catch {
         coreEvents.emitFeedback(
           'error',
-          'Failed to save trust settings. Exiting Gemini CLI.',
+          'Failed to save trust settings. Exiting Gravity-CLI.',
         );
         setTimeout(async () => {
           await runExitCleanup();

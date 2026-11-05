@@ -1,11 +1,11 @@
 {
   "name": "@gravity/cli",
   "version": "0.67.0-nightly.20261020.gb041de017",
-  "description": "Gravity Harness - Modern AI Terminal Agent Interface powered by Antigravity",
+  "description": "Gravity-CLI - Modern AI Terminal Agent Interface powered by Antigravity",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/Fs9822d/gravity-cli.git"
   },
   "type": "module",
   "main": "dist/index.js",

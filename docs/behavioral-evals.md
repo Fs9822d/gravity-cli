@@ -1,15 +1,15 @@
 # Behavioral Evaluations & EDK Guide
 
 This guide introduces the **Eval Development Kit (EDK)** and details how to
-write, validate, run, and report on **behavioral evaluations** in the Gemini CLI
-codebase.
+write, validate, run, and report on **behavioral evaluations** in the
+Gravity-CLI codebase.
 
 ---
 
 ## Overview
 
 Behavioral evaluations are automated tests designed to assert on the
-**behavior** of the Gemini CLI agent (e.g., verifying which tools are called,
+**behavior** of the Gravity-CLI agent (e.g., verifying which tools are called,
 checking call ordering, or avoiding destructive commands) rather than checking
 the final prose output.
 

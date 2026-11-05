@@ -11,7 +11,7 @@ import type { GeminiCliAgent } from './agent.js';
 import type { GeminiCliSession } from './session.js';
 
 /**
- * System instructions for a Gemini CLI agent.
+ * System instructions for a Gravity-CLI agent.
  *
  * Can be either a static string or a function that receives the current
  * session context and returns a string (or a promise of one), allowing

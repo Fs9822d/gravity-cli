@@ -1,8 +1,8 @@
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-# Gemini CLI installation, execution, and releases
+# Gravity-CLI installation, execution, and releases
 
-This document provides an overview of Gemini CLI's system requirements,
+This document provides an overview of Gravity-CLI's system requirements,
 installation methods, and release types.
 
 ## Recommended system specifications
@@ -20,10 +20,10 @@ installation methods, and release types.
   [Gemini Code Assist supported locations](https://developers.google.com/gemini-code-assist/resources/available-locations#americas)
 - **Internet connection required**
 
-## Install Gemini CLI
+## Install Gravity-CLI
 
-We recommend most users install Gemini CLI using one of the following
-installation methods. Note that Gemini CLI comes pre-installed on
+We recommend most users install Gravity-CLI using one of the following
+installation methods. Note that Gravity-CLI comes pre-installed on
 [**Cloud Shell**](https://docs.cloud.google.com/shell/docs) and
 [**Cloud Workstations**](https://cloud.google.com/workstations).
 
@@ -64,30 +64,30 @@ installation methods. Note that Gemini CLI comes pre-installed on
   conda create -y -n gemini_env -c conda-forge nodejs
   conda activate gemini_env
 
-  # Install Gemini CLI globally via npm (inside the environment)
+  # Install Gravity-CLI globally via npm (inside the environment)
   npm install -g @google/gemini-cli
   ```
 
   </TabItem>
 </Tabs>
 
-## Run Gemini CLI
+## Run Gravity-CLI
 
-For most users, we recommend running Gemini CLI with the `gemini` command:
+For most users, we recommend running Gravity-CLI with the `gravity` command:
 
 ```bash
-gemini
+gravity
 ```
 
 For a list of options and additional commands, see the
 [CLI cheatsheet](../cli/cli-reference.md).
 
-You can also run Gemini CLI using one of the following advanced methods:
+You can also run Gravity-CLI using one of the following advanced methods:
 
 <Tabs>
   <TabItem label="npx">
 
-  Run instantly with npx. You can run Gemini CLI without permanent installation.
+  Run instantly with npx. You can run Gravity-CLI without permanent installation.
 
   ```bash
   # Using npx (no installation required)
@@ -104,7 +104,7 @@ You can also run Gemini CLI using one of the following advanced methods:
   </TabItem>
   <TabItem label="Docker/Podman Sandbox">
 
-  For security and isolation, Gemini CLI can be run inside a container. This is
+  For security and isolation, Gravity-CLI can be run inside a container. This is
   the default way that the CLI executes tools that might have side effects.
 
   - **Directly from the registry:** You can run the published sandbox image
@@ -114,11 +114,11 @@ You can also run Gemini CLI using one of the following advanced methods:
     # Run the published sandbox image for a specified CLI version
     docker run --rm -it us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.42.0-nightly.20260428.g59b2dea0e
     ```
-  - **Using the `--sandbox` flag:** If you have Gemini CLI installed locally
+  - **Using the `--sandbox` flag:** If you have Gravity-CLI installed locally
     (using the standard installation described above), you can instruct it to run
     inside the sandbox container.
     ```bash
-    gemini --sandbox -y -p "your prompt here"
+    gravity --sandbox -y -p "your prompt here"
     ```
 
   </TabItem>
@@ -148,8 +148,8 @@ You can also run Gemini CLI using one of the following advanced methods:
     # Link the local cli package to your global node_modules
     npm link packages/cli
 
-    # Now you can run your local version using the `gemini` command
-    gemini
+    # Now you can run your local version using the `gravity` command
+    gravity
     ```
 
   </TabItem>
@@ -157,7 +157,7 @@ You can also run Gemini CLI using one of the following advanced methods:
 
 ## Releases
 
-Gemini CLI has three release channels: stable, preview, and nightly. For most
+Gravity-CLI has three release channels: stable, preview, and nightly. For most
 users, we recommend the stable release, which is the default installation.
 
 <Tabs>

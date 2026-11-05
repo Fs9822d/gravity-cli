@@ -1,12 +1,12 @@
 # Set up an MCP server
 
-Connect Gemini CLI to your external databases and services. In this guide,
-you'll learn how to extend Gemini CLI's capabilities by installing the GitHub
+Connect Gravity-CLI to your external databases and services. In this guide,
+you'll learn how to extend Gravity-CLI's capabilities by installing the GitHub
 MCP server and using it to manage your repositories.
 
 ## Prerequisites
 
-- Gemini CLI installed.
+- Gravity-CLI installed.
 - **Docker:** Required for this specific example (many MCP servers run as Docker
   containers).
 - **GitHub token:** A Personal Access Token (PAT) with repo permissions.
@@ -32,7 +32,7 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="github_pat_..."
 $env:GITHUB_PERSONAL_ACCESS_TOKEN="github_pat_..."
 ```
 
-## How to configure Gemini CLI
+## How to configure Gravity-CLI
 
 You tell Gemini about new servers by editing your `settings.json`.
 
@@ -70,7 +70,7 @@ You tell Gemini about new servers by editing your `settings.json`.
 
 ## How to verify the connection
 
-Restart Gemini CLI. It will automatically try to start the defined servers.
+Restart Gravity-CLI. It will automatically try to start the defined servers.
 
 **Command:** `/mcp list`
 
