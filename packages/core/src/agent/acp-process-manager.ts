@@ -52,6 +52,14 @@ export class AcpProcessManager {
     ensureGlobalCleanupsRegistered();
   }
 
+  getEffort(): 'low' | 'medium' | 'high' | 'xhigh' | 'max' | undefined {
+    return this.options.effort;
+  }
+
+  setEffort(effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max'): void {
+    this.options.effort = effort;
+  }
+
   /**
    * Resolves the path to the Antigravity (agy) executable.
    * Priority:
@@ -102,18 +110,9 @@ export class AcpProcessManager {
   }
 
   /**
-   * Spawns the `agy acp` server process over stdio.
+   * Constructs CLI arguments for spawning `agy acp`.
    */
-  async spawn(workspaceDir?: string): Promise<ChildProcess> {
-    if (
-      this.currentProcess &&
-      !this.currentProcess.killed &&
-      this.currentProcess.exitCode === null
-    ) {
-      return this.currentProcess;
-    }
-
-    const executable = this.findAgyExecutable();
+  buildCommandArgs(workspaceDir?: string): string[] {
     const args: string[] = [];
 
     // Top-level agy CLI flags (must precede 'acp' subcommand)
@@ -121,7 +120,7 @@ export class AcpProcessManager {
       args.push('--effort', this.options.effort);
     }
 
-    if (this.options.model) {
+    if (this.options.model && this.options.model !== 'auto') {
       args.push('--model', this.options.model);
     }
 
@@ -139,6 +138,24 @@ export class AcpProcessManager {
     if (this.options.dangerouslySkipPermissions) {
       args.push('--dangerously-skip-permissions');
     }
+
+    return args;
+  }
+
+  /**
+   * Spawns the `agy acp` server process over stdio.
+   */
+  async spawn(workspaceDir?: string): Promise<ChildProcess> {
+    if (
+      this.currentProcess &&
+      !this.currentProcess.killed &&
+      this.currentProcess.exitCode === null
+    ) {
+      return this.currentProcess;
+    }
+
+    const executable = this.findAgyExecutable();
+    const args = this.buildCommandArgs(workspaceDir);
 
     // Construct execution environment
     // Ensure HOME is writable if running in sandboxes where os.homedir() is read-only

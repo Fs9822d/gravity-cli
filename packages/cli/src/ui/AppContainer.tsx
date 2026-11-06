@@ -1433,17 +1433,29 @@ Logging in with Google... Restarting Gravity Harness to continue.
   }, [config, historyManager]);
 
   const streamAgent = useMemo(() => {
-    if (config?.getAgentSessionInteractiveEnabled?.() === false) {
+    const authType =
+      settings.merged.security?.auth?.selectedType ||
+      config?.getContentGeneratorConfig()?.authType;
+    const isLegacyGemini =
+      authType === AuthType.USE_GEMINI ||
+      authType === AuthType.USE_VERTEX_AI ||
+      authType === AuthType.GATEWAY;
+    if (
+      isLegacyGemini ||
+      config?.getAgentSessionInteractiveEnabled?.() === false
+    ) {
       return undefined;
     }
     const processManager = new AcpProcessManager({
       antigravityPath: config.getAntigravityPath?.(),
-      effort: config.getAntigravityThoughtLevel?.(),
+      effort:
+        config.getEffort?.() || config.getAntigravityThoughtLevel?.(),
       sandbox: config.getSandbox?.() !== undefined,
       model: config.getModel?.(),
     });
     return new AcpAgentProtocol(processManager, {
       workspaceDir: config.getTargetDir?.() || process.cwd(),
+      policyEngine: config.getPolicyEngine?.(),
       getMode: () => {
         const approvalMode = config.getApprovalMode?.();
         if (approvalMode === 'plan') return 'plan';
@@ -1451,7 +1463,7 @@ Logging in with Google... Restarting Gravity Harness to continue.
         return approvalMode || 'default';
       },
     });
-  }, [config]);
+  }, [config, settings.merged.security?.auth?.selectedType]);
 
   const activeStream = streamAgent
     ? // eslint-disable-next-line react-hooks/rules-of-hooks

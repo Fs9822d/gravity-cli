@@ -100,7 +100,10 @@ const listModelCommand: SlashCommand = {
       context.services.settings?.merged?.security?.auth?.selectedType ||
       context.services.agentContext?.config?.getContentGeneratorConfig()
         ?.authType;
-    const isGoogleAi = authType === AuthType.USE_GEMINI;
+    const isGoogleAi =
+      authType === AuthType.USE_GEMINI ||
+      authType === AuthType.USE_VERTEX_AI ||
+      authType === AuthType.GATEWAY;
 
     const models = isGoogleAi ? GOOGLE_AI_API_MODELS : ANTIGRAVITY_MODELS;
     const title = isGoogleAi
@@ -137,6 +140,23 @@ const setModelCommand: SlashCommand = {
 
     const modelName = parts[0];
     const persist = parts.includes('--persist');
+
+    const authType =
+      context.services.settings?.merged?.security?.auth?.selectedType ||
+      context.services.agentContext?.config?.getContentGeneratorConfig()
+        ?.authType;
+    const isGoogleAi =
+      authType === AuthType.USE_GEMINI ||
+      authType === AuthType.USE_VERTEX_AI ||
+      authType === AuthType.GATEWAY;
+
+    if (!isGoogleAi && modelName.toLowerCase() === 'auto') {
+      context.ui.addItem({
+        type: MessageType.ERROR,
+        text: 'The "auto" model router is only supported in Google AI API mode. In Antigravity mode, select an explicit model or adjust the reasoning effort level.',
+      });
+      return;
+    }
 
     if (context.services.agentContext?.config) {
       context.services.agentContext.config.setModel(modelName, !persist);

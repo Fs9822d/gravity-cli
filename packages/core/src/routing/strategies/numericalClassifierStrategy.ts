@@ -114,6 +114,10 @@ export class NumericalClassifierStrategy implements RoutingStrategy {
         return null;
       }
 
+      if (config.getAcpMode?.()) {
+        return null;
+      }
+
       if (!isGemini3Model(model, config)) {
         return null;
       }

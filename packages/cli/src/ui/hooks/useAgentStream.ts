@@ -32,6 +32,9 @@ import {
   type Logger,
   type Part,
   type ToolCallRequestInfo,
+  uiTelemetryService,
+  EVENT_API_RESPONSE,
+  type UiEvent,
 } from '@google/gemini-cli-core';
 import type {
   HistoryItemWithoutId,
@@ -515,11 +518,32 @@ export const useAgentStream = ({
           break;
         }
 
+        case 'usage': {
+          const used = event.inputTokens ?? 0;
+          if (used > 0) {
+            uiTelemetryService.setLastPromptTokenCount(used);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+            uiTelemetryService.addEvent({
+              'event.name': EVENT_API_RESPONSE,
+              model: event.model || 'antigravity',
+              duration_ms: 0,
+              usage: {
+                input_token_count: used,
+                output_token_count: event.outputTokens ?? 0,
+                total_token_count: used + (event.outputTokens ?? 0),
+                cached_content_token_count: event.cachedTokens ?? 0,
+                thoughts_token_count: 0,
+                tool_token_count: 0,
+              },
+            } as unknown as UiEvent);
+          }
+          break;
+        }
+
         case 'initialize':
         case 'session_update':
         case 'elicitation_request':
         case 'elicitation_response':
-        case 'usage':
         case 'custom':
           // These events are currently not handled in the UI
           break;

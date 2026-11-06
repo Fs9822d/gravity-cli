@@ -168,6 +168,57 @@ describe('modelCommand', () => {
         }),
       );
     });
+
+    it('should reject auto model in Antigravity mode', async () => {
+      const setCommand = modelCommand.subCommands?.find(
+        (c) => c.name === 'set',
+      );
+      await setCommand!.action!(mockContext, 'auto');
+
+      expect(mockContext.ui.addItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: MessageType.ERROR,
+          text: expect.stringContaining('The "auto" model router is only supported in Google AI API mode'),
+        }),
+      );
+    });
+
+    it('should allow setting auto model when in USE_VERTEX_AI mode', async () => {
+      mockContext.services.settings.merged.security.auth.selectedType =
+        AuthType.USE_VERTEX_AI;
+      const setCommand = modelCommand.subCommands?.find(
+        (c) => c.name === 'set',
+      );
+      const mockSetModel = vi.fn();
+      mockContext.services.agentContext = {
+        setModel: mockSetModel,
+        getHasAccessToPreviewModel: vi.fn().mockReturnValue(true),
+        getUserId: vi.fn().mockReturnValue('test-user'),
+        getUsageStatisticsEnabled: vi.fn().mockReturnValue(true),
+        getSessionId: vi.fn().mockReturnValue('test-session'),
+        getContentGeneratorConfig: vi
+          .fn()
+          .mockReturnValue({ authType: AuthType.USE_VERTEX_AI }),
+        isInteractive: vi.fn().mockReturnValue(true),
+        getExperiments: vi.fn().mockReturnValue({ experimentIds: [] }),
+        getPolicyEngine: vi.fn().mockReturnValue({
+          getApprovalMode: vi.fn().mockReturnValue('auto'),
+        }),
+        get config() {
+          return this;
+        },
+      } as unknown as Config;
+
+      await setCommand!.action!(mockContext, 'auto');
+
+      expect(mockSetModel).toHaveBeenCalledWith('auto', true);
+      expect(mockContext.ui.addItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: MessageType.INFO,
+          text: expect.stringContaining('Model set to auto'),
+        }),
+      );
+    });
   });
 
   describe('list subcommand', () => {
@@ -191,6 +242,24 @@ describe('modelCommand', () => {
     it('should list Google AI API models when in USE_GEMINI mode', async () => {
       mockContext.services.settings.merged.security.auth.selectedType =
         AuthType.USE_GEMINI;
+      const listCommand = modelCommand.subCommands?.find(
+        (c) => c.name === 'list',
+      );
+      expect(listCommand).toBeDefined();
+
+      await listCommand!.action!(mockContext, '');
+
+      expect(mockContext.ui.addItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: MessageType.INFO,
+          text: expect.stringContaining('Available Google AI API Models:'),
+        }),
+      );
+    });
+
+    it('should list Google AI API models when in USE_VERTEX_AI mode', async () => {
+      mockContext.services.settings.merged.security.auth.selectedType =
+        AuthType.USE_VERTEX_AI;
       const listCommand = modelCommand.subCommands?.find(
         (c) => c.name === 'list',
       );

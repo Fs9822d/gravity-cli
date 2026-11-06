@@ -58,6 +58,9 @@ export {
 } from './conseca-logger.js';
 export type { SlashCommandEvent, ChatCompressionEvent } from './types.js';
 export {
+  EVENT_API_RESPONSE,
+  EVENT_API_ERROR,
+  EVENT_TOOL_CALL,
   SlashCommandStatus,
   EndSessionEvent,
   UserPromptEvent,

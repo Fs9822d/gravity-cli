@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act } from 'react';
-import type { LegacyAgentProtocol } from '@google/gemini-cli-core';
+import { type LegacyAgentProtocol, uiTelemetryService } from '@google/gemini-cli-core';
 import { renderHookWithProviders } from '../../test-utils/render.js';
 
 // --- MOCKS ---
@@ -332,5 +332,46 @@ describe('useAgentStream', () => {
       'invocation' in cancelledWithEmptyName &&
         cancelledWithEmptyName.invocation.getDescription(),
     ).toBe('generic_tool');
+  });
+
+  it('should record token usage to uiTelemetryService when usage event is received', async () => {
+    const setLastPromptSpy = vi.spyOn(uiTelemetryService, 'setLastPromptTokenCount');
+    const addEventSpy = vi.spyOn(uiTelemetryService, 'addEvent');
+
+    await renderHookWithProviders(() =>
+      useAgentStream({
+        agent: mockLegacyAgentProtocol as unknown as LegacyAgentProtocol,
+        addItem: mockAddItem,
+        onCancelSubmit: mockOnCancelSubmit,
+        isShellFocused: false,
+      }),
+    );
+
+    const eventHandler = vi.mocked(mockLegacyAgentProtocol.subscribe).mock
+      .calls[0][0];
+
+    act(() => {
+      eventHandler({
+        type: 'usage',
+        inputTokens: 150,
+        outputTokens: 50,
+        cachedTokens: 20,
+        model: 'gemini-3.8-flash-high',
+      });
+    });
+
+    expect(setLastPromptSpy).toHaveBeenCalledWith(150);
+    expect(addEventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        'event.name': 'gemini_cli.api_response',
+        model: 'gemini-3.8-flash-high',
+        usage: expect.objectContaining({
+          input_token_count: 150,
+          output_token_count: 50,
+          cached_content_token_count: 20,
+          total_token_count: 200,
+        }),
+      }),
+    );
   });
 });

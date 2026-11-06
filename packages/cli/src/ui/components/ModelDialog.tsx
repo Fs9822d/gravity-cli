@@ -45,7 +45,10 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const selectedAuthType =
     settings.merged.security.auth.selectedType ||
     config?.getContentGeneratorConfig()?.authType;
-  const isGoogleAi = selectedAuthType === AuthType.USE_GEMINI;
+  const isGoogleAi =
+    selectedAuthType === AuthType.USE_GEMINI ||
+    selectedAuthType === AuthType.USE_VERTEX_AI ||
+    selectedAuthType === AuthType.GATEWAY;
 
   useKeypress(
     (key) => {

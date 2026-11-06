@@ -22,6 +22,8 @@ import { gemmaCommand } from '../commands/gemma.js';
 import { modelsCommand } from '../commands/models.js';
 import { loginCommand } from '../commands/login.js';
 import {
+  AuthType,
+  getAuthTypeFromEnv,
   setGeminiMdFilename as setServerGeminiMdFilename,
   resetGeminiMdFilename,
   DEFAULT_CONTEXT_FILENAME,
@@ -121,6 +123,7 @@ export interface CliArgs {
   isCommand: boolean | undefined;
   antigravityPath?: string;
   antigravityThoughtLevel?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+  effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 }
 
 /**
@@ -313,6 +316,7 @@ export async function parseArguments(
           description: 'Path to custom Antigravity binary (agy)',
         })
         .option('antigravity-thought-level', {
+          alias: ['effort'],
           type: 'string',
           choices: ['low', 'medium', 'high', 'xhigh', 'max'],
           description: 'Antigravity reasoning effort level',
@@ -869,7 +873,15 @@ export async function loadCliConfig(
     interactive,
   );
 
-  const defaultModel = GEMINI_MODEL_ALIAS_AUTO;
+  const selectedAuthType =
+    settings.security?.auth?.selectedType || getAuthTypeFromEnv();
+  const isAntigravity =
+    selectedAuthType === AuthType.LOGIN_WITH_GOOGLE ||
+    selectedAuthType === AuthType.COMPUTE_ADC;
+
+  const defaultModel = isAntigravity
+    ? 'gemini-3.8-flash-high'
+    : GEMINI_MODEL_ALIAS_AUTO;
   const rawModel =
     argv.model || process.env['GEMINI_MODEL'] || settings.model?.name;
 
@@ -880,10 +892,14 @@ export async function loadCliConfig(
       ? undefined
       : String(rawModel ?? '').trim() || '';
 
-  const resolvedModel =
+  let resolvedModel =
     specifiedModel === GEMINI_MODEL_ALIAS_AUTO
       ? defaultModel
       : specifiedModel || defaultModel;
+
+  if (isAntigravity && resolvedModel === GEMINI_MODEL_ALIAS_AUTO) {
+    resolvedModel = 'gemini-3.8-flash-high';
+  }
   const sandboxConfig = await loadSandboxConfig(settings, argv);
   if (sandboxConfig) {
     const existingPaths = sandboxConfig.allowedPaths || [];
@@ -1157,7 +1173,8 @@ export async function loadCliConfig(
     },
     enableConseca: settings.security?.enableConseca,
     antigravityPath: argv.antigravityPath,
-    antigravityThoughtLevel: argv.antigravityThoughtLevel,
+    antigravityThoughtLevel:
+      argv.antigravityThoughtLevel || argv.effort,
   });
 }
 

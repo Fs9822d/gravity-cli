@@ -21,6 +21,8 @@ import {
   type InitializeResponse,
 } from '@agentclientprotocol/sdk';
 import { Writable, Readable } from 'node:stream';
+import path from 'node:path';
+import { parse as shellParse, type ParseEntry } from 'shell-quote';
 import { v4 as uuidv4 } from 'uuid';
 import type {
   AgentProtocol,
@@ -32,6 +34,8 @@ import type {
 } from './types.js';
 import { AcpProcessManager } from './acp-process-manager.js';
 import { debugLogger } from '../utils/debugLogger.js';
+import type { PolicyEngine } from '../policy/policy-engine.js';
+import { PolicyDecision } from '../policy/types.js';
 
 export interface AcpAgentProtocolOptions {
   workspaceDir?: string;
@@ -39,49 +43,384 @@ export interface AcpAgentProtocolOptions {
   processManager?: AcpProcessManager;
   mode?: 'plan' | 'accept-edits' | 'default';
   getMode?: () => string;
+  policyEngine?: PolicyEngine;
 }
 
 function isRecord(val: unknown): val is Record<string, unknown> {
   return typeof val === 'object' && val !== null;
 }
 
-function isWriteTool(name: string, title?: string, args?: unknown): boolean {
-  const normalized = (name || title || '').toLowerCase();
-  const writeKeywords = [
-    'edit_file',
-    'write_file',
-    'edit',
-    'write',
-    'create_file',
-    'delete_file',
-    'patch_file',
-    'append_file',
-  ];
-  if (writeKeywords.some((w) => normalized.includes(w))) {
-    return true;
+const FILE_WRITE_TOOLS = new Set([
+  'edit_file',
+  'write_file',
+  'replace',
+  'create_file',
+  'delete_file',
+  'patch_file',
+  'append_file',
+]);
+
+const READ_ONLY_TOOLS = new Set([
+  'read_file',
+  'list_directory',
+  'ls',
+  'glob',
+  'grep_search',
+  'read_many_files',
+  'google_web_search',
+  'codebase_investigator',
+  'cli_help',
+  'get_internal_docs',
+  'read_mcp_resource',
+  'list_mcp_resources',
+]);
+
+const MUTATING_SHELL_BINARIES = new Set([
+  'rm',
+  'mv',
+  'cp',
+  'touch',
+  'mkdir',
+  'rmdir',
+  'sed',
+  'awk',
+  'truncate',
+  'dd',
+  'chmod',
+  'chown',
+  'ln',
+  'tee',
+  'patch',
+]);
+
+const GIT_MUTATING_SUBCOMMANDS = new Set([
+  'commit',
+  'push',
+  'merge',
+  'rebase',
+  'reset',
+  'checkout',
+  'switch',
+  'branch',
+  'clean',
+  'stash',
+  'cherry-pick',
+  'revert',
+  'tag',
+  'mv',
+  'rm',
+]);
+
+const PKG_MUTATING_SUBCOMMANDS = new Set([
+  'install',
+  'i',
+  'add',
+  'remove',
+  'uninstall',
+  'update',
+  'upgrade',
+  'publish',
+  'link',
+  'unlink',
+]);
+
+const PIP_MUTATING_SUBCOMMANDS = new Set(['install', 'uninstall']);
+
+export function isCommandWriteOperation(commandStr: string): boolean {
+  if (!commandStr || typeof commandStr !== 'string') return false;
+
+  let entries: ParseEntry[];
+  try {
+    entries = shellParse(commandStr);
+  } catch {
+    const firstWord = commandStr.trim().split(/\s+/)[0]?.toLowerCase();
+    const cleanFirstWord = firstWord
+      ? path.basename(firstWord).replace(/\.exe$/, '')
+      : '';
+    return MUTATING_SHELL_BINARIES.has(cleanFirstWord);
   }
-  if (normalized.includes('command') || normalized.includes('shell')) {
-    if (isRecord(args)) {
-      const cmd = String(
-        args['command'] || args['CommandLine'] || args['cmd'] || '',
-      ).toLowerCase();
-      const writeOps = [
-        'rm ',
-        'mv ',
-        'cp ',
-        'touch ',
-        'mkdir ',
-        'sed ',
-        'git commit',
-        'git push',
-        'npm install',
-        'pip install',
-      ];
-      if (writeOps.some((op) => cmd.includes(op))) {
+
+  const commandSegments: string[][] = [];
+  let currentSegment: string[] = [];
+
+  for (const entry of entries) {
+    if (typeof entry === 'object' && entry !== null && 'op' in entry) {
+      if (entry.op.includes('>')) {
+        return true;
+      }
+      if ([';', '&&', '||', '|', '&'].includes(entry.op)) {
+        if (currentSegment.length > 0) {
+          commandSegments.push(currentSegment);
+          currentSegment = [];
+        }
+        continue;
+      }
+    } else if (typeof entry === 'string') {
+      currentSegment.push(entry);
+    }
+  }
+  if (currentSegment.length > 0) {
+    commandSegments.push(currentSegment);
+  }
+
+  for (const seg of commandSegments) {
+    if (seg.length === 0) continue;
+
+    let cmdIdx = 0;
+    while (cmdIdx < seg.length) {
+      const token = seg[cmdIdx];
+      if (/^[a-zA-Z_][a-zA-Z0-9_]*=/.test(token)) {
+        cmdIdx++;
+        continue;
+      }
+      const lower = token.toLowerCase();
+      if (['sudo', 'env', 'time', 'nohup'].includes(lower)) {
+        cmdIdx++;
+        while (cmdIdx < seg.length) {
+          const opt = seg[cmdIdx];
+          if (/^[a-zA-Z_][a-zA-Z0-9_]*=/.test(opt)) {
+            cmdIdx++;
+            continue;
+          }
+          if (opt.startsWith('-')) {
+            cmdIdx++;
+            if (
+              ['-u', '-g', '-C', '-h', '-p', '-f'].includes(opt) &&
+              cmdIdx < seg.length &&
+              !seg[cmdIdx].startsWith('-')
+            ) {
+              cmdIdx++;
+            }
+            continue;
+          }
+          break;
+        }
+        continue;
+      }
+      break;
+    }
+    if (cmdIdx >= seg.length) continue;
+
+    const rawExecutable = seg[cmdIdx];
+    const executable = path
+      .basename(rawExecutable)
+      .toLowerCase()
+      .replace(/\.exe$/, '');
+
+    if (MUTATING_SHELL_BINARIES.has(executable)) {
+      return true;
+    }
+
+    const restArgs = seg.slice(cmdIdx + 1);
+
+    if (executable === 'git') {
+      let subCmdIdx = 0;
+      while (subCmdIdx < restArgs.length) {
+        const arg = restArgs[subCmdIdx];
+        if (
+          arg === '-C' ||
+          arg === '-c' ||
+          arg === '--git-dir' ||
+          arg === '--work-tree'
+        ) {
+          subCmdIdx += 2;
+          continue;
+        }
+        if (arg.startsWith('-')) {
+          subCmdIdx++;
+          continue;
+        }
+        break;
+      }
+      const subCmd = restArgs[subCmdIdx]?.toLowerCase();
+      if (subCmd && GIT_MUTATING_SUBCOMMANDS.has(subCmd)) {
         return true;
       }
     }
+
+    if (
+      executable === 'npm' ||
+      executable === 'yarn' ||
+      executable === 'pnpm' ||
+      executable === 'bun'
+    ) {
+      let subCmdIdx = 0;
+      while (subCmdIdx < restArgs.length) {
+        const arg = restArgs[subCmdIdx];
+        if (arg === '--prefix' || arg === '-w' || arg === '--workspace') {
+          subCmdIdx += 2;
+          continue;
+        }
+        if (arg.startsWith('-')) {
+          subCmdIdx++;
+          continue;
+        }
+        break;
+      }
+      const subCmd = restArgs[subCmdIdx]?.toLowerCase();
+      if (subCmd && PKG_MUTATING_SUBCOMMANDS.has(subCmd)) {
+        return true;
+      }
+    }
+
+    if (executable === 'pip' || executable === 'pip3') {
+      let subCmdIdx = 0;
+      while (subCmdIdx < restArgs.length) {
+        const arg = restArgs[subCmdIdx];
+        if (
+          [
+            '--timeout',
+            '--retries',
+            '--proxy',
+            '--cert',
+            '--client-cert',
+            '--cache-dir',
+            '--index-url',
+            '--extra-index-url',
+            '--find-links',
+            '-t',
+          ].includes(arg)
+        ) {
+          subCmdIdx += 2;
+          continue;
+        }
+        if (arg.startsWith('-')) {
+          subCmdIdx++;
+          continue;
+        }
+        break;
+      }
+      const subCmd = restArgs[subCmdIdx]?.toLowerCase();
+      if (subCmd && PIP_MUTATING_SUBCOMMANDS.has(subCmd)) {
+        return true;
+      }
+    }
+
+    if (executable === 'python' || executable === 'python3' || executable === 'py') {
+      const mIdx = restArgs.findIndex((a) => a === '-m');
+      if (mIdx !== -1 && restArgs[mIdx + 1]?.toLowerCase() === 'pip') {
+        const pipArgs = restArgs.slice(mIdx + 2);
+        let subCmdIdx = 0;
+        while (subCmdIdx < pipArgs.length) {
+          const arg = pipArgs[subCmdIdx];
+          if (
+            [
+              '--timeout',
+              '--retries',
+              '--proxy',
+              '--cert',
+              '--client-cert',
+              '--cache-dir',
+              '--index-url',
+              '--extra-index-url',
+              '--find-links',
+              '-t',
+            ].includes(arg)
+          ) {
+            subCmdIdx += 2;
+            continue;
+          }
+          if (arg.startsWith('-')) {
+            subCmdIdx++;
+            continue;
+          }
+          break;
+        }
+        const subCmd = pipArgs[subCmdIdx]?.toLowerCase();
+        if (subCmd && PIP_MUTATING_SUBCOMMANDS.has(subCmd)) {
+          return true;
+        }
+      }
+    }
   }
+
+  return false;
+}
+
+export function isWriteTool(
+  name: string,
+  title?: string,
+  args?: unknown,
+  kindOrPolicyEngine?: string | PolicyEngine,
+  _policyEngine?: PolicyEngine,
+): boolean {
+  let kind: string | undefined;
+  if (typeof kindOrPolicyEngine === 'string') {
+    kind = kindOrPolicyEngine;
+  }
+
+  // 1. Tool classification by ACP ToolKind if provided
+  if (kind) {
+    const normalizedKind = kind.toLowerCase();
+    if (
+      normalizedKind === 'edit' ||
+      normalizedKind === 'delete' ||
+      normalizedKind === 'move'
+    ) {
+      return true;
+    }
+    if (
+      normalizedKind === 'read' ||
+      normalizedKind === 'search' ||
+      normalizedKind === 'think' ||
+      normalizedKind === 'fetch'
+    ) {
+      return false;
+    }
+  }
+
+  const normalizedName = (name || '').toLowerCase().trim();
+  const normalizedTitle = (title || '').toLowerCase().trim();
+
+  // 2. Explicit read-only tools
+  if (
+    READ_ONLY_TOOLS.has(normalizedName) ||
+    READ_ONLY_TOOLS.has(normalizedTitle)
+  ) {
+    return false;
+  }
+
+  // 3. Explicit write / file editing tools
+  if (
+    FILE_WRITE_TOOLS.has(normalizedName) ||
+    FILE_WRITE_TOOLS.has(normalizedTitle) ||
+    normalizedName.startsWith('write_') ||
+    normalizedName.startsWith('edit_') ||
+    normalizedName.startsWith('patch_') ||
+    normalizedName.startsWith('delete_') ||
+    normalizedName.startsWith('append_')
+  ) {
+    return true;
+  }
+
+  // 4. Shell / command execution tools
+  const isShellTool =
+    normalizedName === 'run_shell_command' ||
+    normalizedName === 'execute_command' ||
+    normalizedName === 'command' ||
+    normalizedName === 'shell' ||
+    normalizedName === 'bash' ||
+    normalizedName === 'run_command' ||
+    normalizedTitle.includes('shell') ||
+    normalizedTitle.includes('command');
+
+  if (isShellTool) {
+    if (isRecord(args)) {
+      const cmd = String(
+        args['command'] ||
+          args['CommandLine'] ||
+          args['cmd'] ||
+          args['input'] ||
+          '',
+      );
+      if (cmd) {
+        return isCommandWriteOperation(cmd);
+      }
+    } else if (typeof args === 'string') {
+      return isCommandWriteOperation(args);
+    }
+  }
+
   return false;
 }
 
@@ -153,7 +492,15 @@ export class AcpAgentProtocol implements AgentProtocol {
     return this.connection;
   }
 
+  getProcessManager(): AcpProcessManager {
+    return this.processManager;
+  }
+
   async setModel(modelId: string): Promise<void> {
+    if (modelId === 'auto') {
+      debugLogger.warn('Ignoring /model auto in Antigravity ACP mode');
+      return;
+    }
     if (this.connection && this.sessionId) {
       try {
         await this.connection.unstable_setSessionModel({
@@ -263,41 +610,8 @@ export class AcpAgentProtocol implements AgentProtocol {
       const stream = ndJsonStream(stdinWeb, stdoutWeb);
 
       const clientHandler: Client = {
-        requestPermission: async (
-          params: RequestPermissionRequest,
-        ): Promise<RequestPermissionResponse> => {
-          const currentMode = this.getMode().toLowerCase();
-          const toolCall = params.toolCall;
-          if (
-            currentMode === 'plan' &&
-            toolCall &&
-            isWriteTool(
-              toolCall.title || '',
-              toolCall.title ?? undefined,
-              toolCall.rawInput,
-            )
-          ) {
-            return {
-              outcome: {
-                outcome: 'cancelled',
-              },
-            };
-          }
-          const selectedOption = params.options[0]?.optionId;
-          if (selectedOption) {
-            return {
-              outcome: {
-                outcome: 'selected',
-                optionId: selectedOption,
-              },
-            };
-          }
-          return {
-            outcome: {
-              outcome: 'cancelled',
-            },
-          };
-        },
+        requestPermission: (params: RequestPermissionRequest) =>
+          this.requestPermission(params),
         sessionUpdate: async (notification: SessionNotification) => {
           this.handleSessionUpdate(notification);
         },
@@ -379,6 +693,71 @@ export class AcpAgentProtocol implements AgentProtocol {
     return this.initPromise;
   }
 
+  async requestPermission(
+    params: RequestPermissionRequest,
+  ): Promise<RequestPermissionResponse> {
+    const currentMode = this.getMode().toLowerCase();
+    const toolCall = params.toolCall;
+    if (toolCall) {
+      if (this.options.policyEngine) {
+        try {
+          const res = await this.options.policyEngine.check(
+            {
+              name: toolCall.title || 'tool',
+              args: isRecord(toolCall.rawInput) ? toolCall.rawInput : {},
+            },
+            undefined,
+          );
+          if (
+            res.decision === PolicyDecision.DENY ||
+            String(res.decision).toLowerCase() === 'deny'
+          ) {
+            return {
+              outcome: {
+                outcome: 'cancelled',
+              },
+            };
+          }
+        } catch {
+          // Ignore check failures and proceed to plan mode check
+        }
+      }
+
+      if (currentMode === 'plan') {
+        const isWrite = isWriteTool(
+          toolCall.title || '',
+          toolCall.title ?? undefined,
+          toolCall.rawInput,
+          toolCall.kind ?? undefined,
+          this.options.policyEngine,
+        );
+
+        if (isWrite) {
+          return {
+            outcome: {
+              outcome: 'cancelled',
+            },
+          };
+        }
+      }
+    }
+
+    const selectedOption = params.options[0]?.optionId;
+    if (selectedOption) {
+      return {
+        outcome: {
+          outcome: 'selected',
+          optionId: selectedOption,
+        },
+      };
+    }
+    return {
+      outcome: {
+        outcome: 'cancelled',
+      },
+    };
+  }
+
   private handleSessionUpdate(notification: SessionNotification): void {
     const update = notification.update;
     const streamId = this.currentStreamId || this.sessionId || 'default';
@@ -422,7 +801,13 @@ export class AcpAgentProtocol implements AgentProtocol {
 
       if (
         currentMode === 'plan' &&
-        isWriteTool(update.title || '', update.title, update.rawInput)
+        isWriteTool(
+          update.title || '',
+          update.title,
+          update.rawInput,
+          update.kind ?? undefined,
+          this.options.policyEngine,
+        )
       ) {
         this.blockedToolCalls.add(update.toolCallId);
       }

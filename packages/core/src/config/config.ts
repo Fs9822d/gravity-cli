@@ -764,6 +764,7 @@ export interface ConfigParameters {
   logRagSnippets?: boolean;
   antigravityPath?: string;
   antigravityThoughtLevel?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+  effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 }
 
 export class Config implements McpContext, AgentLoopContext {
@@ -869,7 +870,7 @@ export class Config implements McpContext, AgentLoopContext {
   private quotaErrorOccurred: boolean = false;
   private creditsNotificationShown: boolean = false;
   private readonly antigravityPath?: string;
-  private readonly antigravityThoughtLevel?:
+  private antigravityThoughtLevel?:
     | 'low'
     | 'medium'
     | 'high'
@@ -1050,7 +1051,8 @@ export class Config implements McpContext, AgentLoopContext {
     this.question = params.question;
     this.worktreeSettings = params.worktreeSettings;
     this.antigravityPath = params.antigravityPath;
-    this.antigravityThoughtLevel = params.antigravityThoughtLevel;
+    this.antigravityThoughtLevel =
+      params.antigravityThoughtLevel || params.effort;
 
     this._sandboxPolicyManager = new SandboxPolicyManager();
     const initialApprovalMode =
@@ -2326,6 +2328,20 @@ export class Config implements McpContext, AgentLoopContext {
     | 'max'
     | undefined {
     return this.antigravityThoughtLevel;
+  }
+
+  getEffort():
+    | 'low'
+    | 'medium'
+    | 'high'
+    | 'xhigh'
+    | 'max'
+    | undefined {
+    return this.antigravityThoughtLevel;
+  }
+
+  setEffort(effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max'): void {
+    this.antigravityThoughtLevel = effort;
   }
 
   getHasAccessToPreviewModel(): boolean {
